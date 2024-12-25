@@ -1,2 +1,8 @@
 build:
-	gcc -Wall -Wextra -std=c99 ./src/*.c -o renderer
+	gcc -Wall -Wextra -lSDL2 -std=c99 ./src/*.c -o ./bin/renderer
+
+run:
+	./bin/renderer
+
+clean:
+	rm ./bin/*
