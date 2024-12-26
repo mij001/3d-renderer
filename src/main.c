@@ -7,12 +7,8 @@
 #include "display.h"
 #include "draw.h"
 
-
-// extern size_t window_height;
-// extern size_t window_width;
 size_t end_loop = 1;
 size_t mesh_size;
-
 
 const size_t fov_scale_factor = 128;
 vec3d_t *mesh_points = NULL;
@@ -27,14 +23,15 @@ void setup_renderer(void)
     projected_points = (vec2d_t *)malloc(sizeof(vec2d_t) * mesh_size);
 
     size_t point_num = 0;
-    for (size_t x = -1; x <= 1; x += 0.25)
+    for (float x = -1; x <= 1; x += 0.25)
     {
-        for (size_t y = -1; y <= 1; y += 0.25)
+        for (float y = -1; y <= 1; y += 0.25)
         {
-            for (size_t z = -1; z <= 1; z += 0.25)
+            for (float z = -1; z <= 1; z += 0.25)
             {
                 vec3d_t point = {.x = x, .y = y, .z = z};
                 mesh_points[point_num] = point;
+                //printf("%f  -  %f\n", point.x, point.y);
                 point_num++;
             }
         }
@@ -65,24 +62,30 @@ void handle_events(void)
         break;
     }
 }
-void process_system(void)
+void update_system(void)
 {
+    for (size_t i = 0; i < mesh_size; i++)
+    {
+        vec3d_t point3d = mesh_points[i];
+        vec2d_t p_point = project_3dto2d(point3d);
+        projected_points[i] = p_point;
+    }   
 }
 
 void render_canvas(void)
 {
     // sdl buittin red is replaced by my color using the buffer
-    clear_color_buf(0xff00000);
+    clear_color_buf(0xff00ff00);
 
-    // draw_grid_on_buf(10, 0xffff0000);
-    /* drwar rects on points locations */
     /* scale the projection to be visible and translate to middle */
     float x_pos, y_pos;
     for (size_t i = 0; i < mesh_size; i++)
     {
-        x_pos = projected_points[i].x * fov_scale_factor - window_width / 2;
-        y_pos = projected_points[i].y * fov_scale_factor - window_height / 2;
-        draw_rect_on_buf(x_pos, y_pos, 2, 2, 0xff00ff00);
+        vec2d_t p_point = projected_points[i];
+        x_pos = (p_point.x * fov_scale_factor) + (window_width / 2);
+        y_pos = (p_point.y * fov_scale_factor) + (window_height / 2);
+        //printf("%f", x_pos);
+        draw_rect_on_buf(x_pos, y_pos, 2, 2, 0xff0000ff);
     }
 
     render_color_buf();
@@ -100,7 +103,7 @@ int main(void)
     while (!end_loop)
     {
         handle_events();
-        process_system();
+        update_system();
         render_canvas();
     }
     free(mesh_points);
