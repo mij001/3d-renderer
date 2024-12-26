@@ -75,7 +75,7 @@ void update_system(void)
 void render_canvas(void)
 {
     // sdl buittin red is replaced by my color using the buffer
-    clear_color_buf(0xff00ff00);
+    clear_color_buf(0xff000000);
 
     /* scale the projection to be visible and translate to middle */
     float x_pos, y_pos;
@@ -85,7 +85,7 @@ void render_canvas(void)
         x_pos = (p_point.x * fov_scale_factor) + (window_width / 2);
         y_pos = (p_point.y * fov_scale_factor) + (window_height / 2);
         //printf("%f", x_pos);
-        draw_rect_on_buf(x_pos, y_pos, 2, 2, 0xff0000ff);
+        draw_rect_on_buf(x_pos, y_pos, 4, 4, 0xff00ff00);
     }
 
     render_color_buf();

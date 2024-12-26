@@ -48,7 +48,7 @@ void draw_point_on_buf(int x, int y, uint32_t color)
 }
 
 vec2d_t project_3dto2d(vec3d_t point)
-{
-    vec2d_t projected = {point.x, point.y};
+{   
+    vec2d_t projected = {point.x/point.z, point.y/point.z};
     return projected;
 }

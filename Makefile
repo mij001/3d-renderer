@@ -6,3 +6,6 @@ run:
 
 clean:
 	rm ./bin/*
+
+bun: clean build
+	./bin/renderer
