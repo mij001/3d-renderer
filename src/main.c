@@ -2,17 +2,12 @@
 #include <stdint.h>
 #include <SDL2/SDL.h>
 #include "rerr.h"
-#include "globals.h"
 #include "vector.h"
-#include "init_stuff.h"
-#include "draw.h"
 #include "display.h"
 
 // extern size_t window_height;
 // extern size_t window_width;
 size_t end_loop = 1;
-uint32_t *color_buf;
-
 size_t mesh_size;
 
 
@@ -22,8 +17,6 @@ vec2d_t *projected_points = NULL;
 
 void setup_renderer(void)
 {
-
-    color_buf = (uint32_t *)malloc(sizeof(uint32_t) * window_height * window_width);
 
     /* create mesh points 3d array */
     mesh_size = 9 * 9 * 9;
