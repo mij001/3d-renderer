@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <SDL2/SDL.h>
 #include "rerr.h"
+#include <math.h>
 typedef struct
 {
     float x;

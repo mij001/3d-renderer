@@ -10,14 +10,21 @@
 size_t end_loop = 1;
 size_t mesh_size;
 
-const size_t fov_scale_factor = 128;
+const size_t fov_scale_factor = 700;
 vec3d_t *mesh_points = NULL;
 vec2d_t *projected_points = NULL;
+vec3d_t camera_pos_g;
+float rot_angle = 0;
 
 void setup_renderer(void)
 {
-
-    /* create mesh points 3d array */
+    vec3d_t camera_pos = {
+        .x = 0,
+        .y = 0,
+        .z = -5
+    };
+    
+    camera_pos_g = camera_pos;
     mesh_size = 9 * 9 * 9;
     mesh_points = (vec3d_t *)malloc(sizeof(vec3d_t) * mesh_size);
     projected_points = (vec2d_t *)malloc(sizeof(vec2d_t) * mesh_size);
@@ -67,6 +74,24 @@ void update_system(void)
     for (size_t i = 0; i < mesh_size; i++)
     {
         vec3d_t point3d = mesh_points[i];
+        /* point scaling, translation and rotations */
+        /* point scaling */
+        point3d = rot_x_vec(point3d, rot_angle); 
+        point3d = rot_y_vec(point3d, rot_angle); 
+        point3d = rot_z_vec(point3d, rot_angle); 
+        rot_angle += 0.000001;
+        printf("%f\n", rot_angle);
+
+        /* point transation */
+        /* point rotation */
+
+        /* code the camera position translstion & rotation */
+        /* cam translation */
+        point3d.x -= camera_pos_g.x;
+        point3d.y -= camera_pos_g.y;
+        point3d.z -= camera_pos_g.z;
+
+        /* TODO: cam rotation*/
         vec2d_t p_point = project_3dto2d(point3d);
         projected_points[i] = p_point;
     }   
