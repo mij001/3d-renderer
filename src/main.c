@@ -3,7 +3,10 @@
 #include <SDL2/SDL.h>
 #include "rerr.h"
 #include "vector.h"
+#include "inir_rndrr.h"
 #include "display.h"
+#include "draw.h"
+
 
 // extern size_t window_height;
 // extern size_t window_width;
