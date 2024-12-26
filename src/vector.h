@@ -18,3 +18,9 @@ typedef struct
     float z;
 
 } vec3d_t;
+
+vec3d_t scale_vec (vec3d_t vector, float scaler);
+vec3d_t translate_vec (vec3d_t vector, vec3d_t translator);
+vec3d_t rot_x_vec (vec3d_t vector, float angle);    
+vec3d_t rot_y_vec (vec3d_t vector, float angle);
+vec3d_t rot_z_vec (vec3d_t vector, float angle);
