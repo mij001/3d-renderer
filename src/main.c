@@ -3,25 +3,46 @@
 #include <SDL2/SDL.h>
 #include "rerr.h"
 #include "globals.h"
+#include "vector.h"
 #include "init_stuff.h"
 #include "draw.h"
 #include "display.h"
 
+// extern size_t window_height;
+// extern size_t window_width;
+size_t end_loop = 1;
+uint32_t *color_buf;
+
+size_t mesh_size;
+
+
+const size_t fov_scale_factor = 128;
+vec3d_t *mesh_points = NULL;
+vec2d_t *projected_points = NULL;
 
 void setup_renderer(void)
 {
-    SDL_DisplayMode display_info;
-    SDL_GetCurrentDisplayMode(0, &display_info);
-    window_height = display_info.h;
-    window_width = display_info.w;
 
     color_buf = (uint32_t *)malloc(sizeof(uint32_t) * window_height * window_width);
-    rndr_texture = SDL_CreateTexture(
-        renderer,
-        SDL_PIXELFORMAT_ARGB8888,
-        SDL_TEXTUREACCESS_STREAMING,
-        window_width,
-        window_height);
+
+    /* create mesh points 3d array */
+    mesh_size = 9 * 9 * 9;
+    mesh_points = (vec3d_t *)malloc(sizeof(vec3d_t) * mesh_size);
+    projected_points = (vec2d_t *)malloc(sizeof(vec2d_t) * mesh_size);
+
+    size_t point_num = 0;
+    for (size_t x = -1; x <= 1; x += 0.25)
+    {
+        for (size_t y = -1; y <= 1; y += 0.25)
+        {
+            for (size_t z = -1; z <= 1; z += 0.25)
+            {
+                vec3d_t point = {.x = x, .y = y, .z = z};
+                mesh_points[point_num] = point;
+                point_num++;
+            }
+        }
+    }
 }
 
 void handle_events(void)
@@ -48,26 +69,30 @@ void handle_events(void)
         break;
     }
 }
-void process_system(void) {}
-
+void process_system(void)
+{
+}
 
 void render_canvas(void)
 {
-    /*sets the color used for element drawing (like fill()) in processing*/
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0, 0, 0xff);
-    /*paint whole canvas with "fill" color*/
-    SDL_RenderClear(renderer);
     // sdl buittin red is replaced by my color using the buffer
-    clear_color_buf(0xffffff00);
+    clear_color_buf(0xff00000);
 
-    draw_grid_on_buf(10, 0xffff0000);
-    draw_rect_on_buf(100, 300, 400, 500, 0xff0000ff);
+    // draw_grid_on_buf(10, 0xffff0000);
+    /* drwar rects on points locations */
+    /* scale the projection to be visible and translate to middle */
+    float x_pos, y_pos;
+    for (size_t i = 0; i < mesh_size; i++)
+    {
+        x_pos = projected_points[i].x * fov_scale_factor - window_width / 2;
+        y_pos = projected_points[i].y * fov_scale_factor - window_height / 2;
+        draw_rect_on_buf(x_pos, y_pos, 2, 2, 0xff00ff00);
+    }
 
     render_color_buf();
     /*like an update canvas call*/
     SDL_RenderPresent(renderer);
 }
-
 
 int main(void)
 {
@@ -82,7 +107,9 @@ int main(void)
         process_system();
         render_canvas();
     }
-
+    free(mesh_points);
+    free(projected_points);
+    destroy_renderer();
     printf("hi mom!  \n");
     return 0;
 }
