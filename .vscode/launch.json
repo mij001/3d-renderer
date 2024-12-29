@@ -6,10 +6,10 @@
       "type": "cppdbg",
       "request": "launch",
       "args": [],
-      "stopAtEntry": false,
+      "stopAtEntry": true,
       "externalConsole": false,
       "cwd": "/home/inomal/projects/3d-graphics-fs/3d-renderer/src",
-      "program": "/home/inomal/projects/3d-graphics-fs/3d-renderer/src/build/Debug/outDebug",
+      "program": "/home/inomal/projects/3d-graphics-fs/3d-renderer/bin/renderer"  ,
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

@@ -1,5 +1,5 @@
 build:
-	gcc -Wall -Wextra -lm -lSDL2 -std=c99 ./src/*.c -o ./bin/renderer
+	gcc -Wall -g -Wextra -lm -lSDL2 -std=c99 ./src/*.c -o ./bin/renderer
 
 run:
 	./bin/renderer
