@@ -6,13 +6,17 @@
 #include "inir_rndrr.h"
 #include "display.h"
 #include "draw.h"
+#include "mesh.h"
+#include "array.h"
 
 size_t end_loop = 1;
-size_t mesh_size;
 
 const size_t fov_scale_factor = 700;
+
 vec3d_t *mesh_points = NULL;
+vec3d_t *mesh_points_tf = NULL;
 vec2d_t *projected_points = NULL;
+
 vec3d_t camera_pos_g;
 float rot_angle = 0;
 
@@ -21,27 +25,20 @@ void setup_renderer(void)
     vec3d_t camera_pos = {
         .x = 0,
         .y = 0,
-        .z = -5
-    };
-    
-    camera_pos_g = camera_pos;
-    mesh_size = 9 * 9 * 9;
-    mesh_points = (vec3d_t *)malloc(sizeof(vec3d_t) * mesh_size);
-    projected_points = (vec2d_t *)malloc(sizeof(vec2d_t) * mesh_size);
+        .z = -5};
 
-    size_t point_num = 0;
-    for (float x = -1; x <= 1; x += 0.25)
+    camera_pos_g = camera_pos;
+    mesh_points = (vec3d_t *)malloc(sizeof(vec3d_t) * N_MESH_VERTICES);
+    mesh_points_tf = (vec3d_t *)malloc(sizeof(vec3d_t) * N_MESH_VERTICES);
+    projected_points = (vec2d_t *)malloc(sizeof(vec2d_t) * N_MESH_VERTICES);
+
+    for (size_t i = 0; i < N_MESH_VERTICES; i++)
     {
-        for (float y = -1; y <= 1; y += 0.25)
-        {
-            for (float z = -1; z <= 1; z += 0.25)
-            {
-                vec3d_t point = {.x = x, .y = y, .z = z};
-                mesh_points[point_num] = point;
-                //printf("%f  -  %f\n", point.x, point.y);
-                point_num++;
-            }
-        }
+
+        vec3d_t point = mesh_vertices[i];
+        mesh_points[i] = point;
+        mesh_points_tf[i] = point;
+        // printf("%f  -  %f\n", point.x, point.y);
     }
 }
 
@@ -71,15 +68,14 @@ void handle_events(void)
 }
 void update_system(void)
 {
-    for (size_t i = 0; i < mesh_size; i++)
+    for (size_t i = 0; i < N_MESH_VERTICES; i++)
     {
-        vec3d_t point3d = mesh_points[i];
         /* point scaling, translation and rotations */
         /* point scaling */
-        point3d = rot_x_vec(point3d, rot_angle); 
-        point3d = rot_y_vec(point3d, rot_angle); 
-        point3d = rot_z_vec(point3d, rot_angle); 
-        rot_angle += 0.000001;
+        mesh_points_tf[i] = rot_x_vec(mesh_points[i], rot_angle);
+        mesh_points_tf[i] = rot_y_vec(mesh_points_tf[i], rot_angle);
+        mesh_points_tf[i] = rot_z_vec(mesh_points_tf[i], rot_angle);
+        rot_angle += 0.0001;
         printf("%f\n", rot_angle);
 
         /* point transation */
@@ -87,14 +83,14 @@ void update_system(void)
 
         /* code the camera position translstion & rotation */
         /* cam translation */
-        point3d.x -= camera_pos_g.x;
-        point3d.y -= camera_pos_g.y;
-        point3d.z -= camera_pos_g.z;
+        mesh_points_tf[i].x -= camera_pos_g.x;
+        mesh_points_tf[i].y -= camera_pos_g.y;
+        mesh_points_tf[i].z -= camera_pos_g.z;
 
         /* TODO: cam rotation*/
-        vec2d_t p_point = project_3dto2d(point3d);
+        vec2d_t p_point = project_3dto2d(mesh_points_tf[i]);
         projected_points[i] = p_point;
-    }   
+    }
 }
 
 void render_canvas(void)
@@ -104,12 +100,12 @@ void render_canvas(void)
 
     /* scale the projection to be visible and translate to middle */
     float x_pos, y_pos;
-    for (size_t i = 0; i < mesh_size; i++)
+    for (size_t i = 0; i < N_MESH_VERTICES; i++)
     {
         vec2d_t p_point = projected_points[i];
         x_pos = (p_point.x * fov_scale_factor) + (window_width / 2);
         y_pos = (p_point.y * fov_scale_factor) + (window_height / 2);
-        //printf("%f", x_pos);
+        // printf("%f", x_pos);
         draw_rect_on_buf(x_pos, y_pos, 4, 4, 0xff00ff00);
     }
 
@@ -120,7 +116,6 @@ void render_canvas(void)
 
 int main(void)
 {
-
     end_loop = renderer_init();
 
     setup_renderer();
