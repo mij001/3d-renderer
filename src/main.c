@@ -41,16 +41,7 @@ void setup_renderer(void)
     {
 
         vec3d_t point = mesh_vertices[i];
-        // push_to_list(mesh_points_dyn, point);
-        //////////////////////////////////////////////////////////////////////////////
-        if ((mesh_points_dyn).capacity <= (((mesh_points_dyn).cursor) + 1) * ((mesh_points_dyn).element_size))
-        {
-            (mesh_points_dyn).capacity += ((mesh_points_dyn).base_element_count) * ((mesh_points_dyn).element_size);
-            (mesh_points_dyn).array = realloc((mesh_points_dyn).array, ((mesh_points_dyn).capacity));
-        }
-        memcpy(((mesh_points_dyn).array + ((mesh_points_dyn).cursor) * ((mesh_points_dyn).element_size)), &(point), (mesh_points_dyn).element_size);
-        (mesh_points_dyn).cursor++;
-        //////////////////////////////////////////////////////////////////////////////
+        push_to_list(mesh_points_dyn, point);
         vec2d_t p_point = {.x = point.x, .y = point.y};
         push_to_list(mesh_points_tf_dyn, point);
         push_to_list(projected_points_dyn, p_point);
