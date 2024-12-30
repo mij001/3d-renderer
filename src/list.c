@@ -2,7 +2,7 @@
 
 list_t list_create(size_t element_size, size_t base_element_count)
 {
-    base_element_count = (base_element_count >= 100) ? base_element_count : 0;
+    base_element_count = (base_element_count >= 100) ? base_element_count : 100;
 
     list_t new_list = {.element_size = element_size,
                        .base_element_count = base_element_count,

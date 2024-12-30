@@ -8,8 +8,9 @@
 #include "draw.h"
 #include "mesh.h"
 #include "array.h"
+#include "list.h"
 
-const int FPS = 30;
+const int FPS = 60;
 const int FPS_MS = 1000 / FPS;
 size_t tickes_in_prev_frame = 0;
 
@@ -17,14 +18,9 @@ size_t end_loop = 1;
 
 const size_t fov_scale_factor = 700;
 
-// vec3d_t *mesh_points = NULL;
-vec3d_t *mesh_points_dyn = NULL;
-
-// vec3d_t *mesh_points_tf = NULL;
-vec3d_t *mesh_points_tf_dyn = NULL;
-
-// vec2d_t *projected_points = NULL;
-vec2d_t *projected_points_dyn = NULL;
+list_t mesh_points_dyn;
+list_t mesh_points_tf_dyn;
+list_t projected_points_dyn;
 
 vec3d_t camera_pos_g;
 float rot_angle = 0;
@@ -37,29 +33,27 @@ void setup_renderer(void)
         .z = -5};
 
     camera_pos_g = camera_pos;
-    // mesh_points = (vec3d_t *)malloc(sizeof(vec3d_t) * N_MESH_VERTICES);
-    // mesh_points_dyn = (vec3d_t *)malloc(sizeof(vec3d_t) * N_MESH_VERTICES);
-    // mesh_points_tf = (vec3d_t *)malloc(sizeof(vec3d_t) * N_MESH_VERTICES);
-    // mesh_points_tf_dyn = (vec3d_t *)malloc(sizeof(vec3d_t) * N_MESH_VERTICES);
 
-    array_hold(mesh_points_dyn, N_MESH_VERTICES, sizeof(vec3d_t));
-    array_hold(mesh_points_tf_dyn, N_MESH_VERTICES, sizeof(vec3d_t));
-    array_hold(projected_points_dyn, N_MESH_VERTICES, sizeof(vec2d_t));
-
-
-    // projected_points = (vec2d_t *)malloc(sizeof(vec2d_t) * N_MESH_VERTICES);
-    //projected_points_dyn = (vec2d_t *)malloc(sizeof(vec2d_t) * N_MESH_VERTICES);
+    mesh_points_dyn = list_create(sizeof(vec3d_t), 1);
+    mesh_points_tf_dyn = list_create(sizeof(vec3d_t), 1);
 
     for (size_t i = 0; i < N_MESH_VERTICES; i++)
     {
 
         vec3d_t point = mesh_vertices[i];
-        // mesh_points[i] = point;
-        array_push(mesh_points_dyn, point);
-
-        // mesh_points_tf[i] = point;
-        array_push(mesh_points_tf_dyn, point);
-        // printf("%f  -  %f\n", point.x, point.y);
+        // push_to_list(mesh_points_dyn, point);
+        //////////////////////////////////////////////////////////////////////////////
+        if ((mesh_points_dyn).capacity <= (((mesh_points_dyn).cursor) + 1) * ((mesh_points_dyn).element_size))
+        {
+            (mesh_points_dyn).capacity += ((mesh_points_dyn).base_element_count) * ((mesh_points_dyn).element_size);
+            (mesh_points_dyn).array = realloc((mesh_points_dyn).array, ((mesh_points_dyn).capacity));
+        }
+        memcpy(((mesh_points_dyn).array + ((mesh_points_dyn).cursor) * ((mesh_points_dyn).element_size)), &(point), (mesh_points_dyn).element_size);
+        (mesh_points_dyn).cursor++;
+        //////////////////////////////////////////////////////////////////////////////
+        vec2d_t p_point = {.x = point.x, .y = point.y};
+        push_to_list(mesh_points_tf_dyn, point);
+        push_to_list(projected_points_dyn, p_point);
     }
 }
 
@@ -99,44 +93,33 @@ void update_system(void)
     }
     tickes_in_prev_frame = SDL_GetTicks();
     /////////////////////////////////
-    projected_points_dyn = NULL;
 
+    projected_points_dyn = list_create(sizeof(vec3d_t), 1);
     for (size_t i = 0; i < N_MESH_VERTICES; i++)
     {
         /* point scaling, translation and rotations */
         /* point scaling */
-        //  mesh_points_tf[i] = rot_x_vec(mesh_points[i], rot_angle);
-        //  mesh_points_tf[i] = rot_x_vec(mesh_points_dyn[i], rot_angle);
-        //  mesh_points_tf[i] = rot_y_vec(mesh_points_tf[i], rot_angle);
-        //  mesh_points_tf[i] = rot_z_vec(mesh_points_tf[i], rot_angle);
-        //mesh_points_tf_dyn[i] = rot_x_vec(mesh_points_dyn[i], rot_angle);
-        mesh_points_tf_dyn[i] = rot_x_vec(mesh_points_dyn[i], rot_angle);
-        mesh_points_tf_dyn[i] = rot_y_vec(mesh_points_tf_dyn[i], rot_angle);
-        mesh_points_tf_dyn[i] = rot_z_vec(mesh_points_tf_dyn[i], rot_angle);
+        get_list_element(vec3d_t, mesh_points_tf_dyn, i) = rot_x_vec(get_list_element(vec3d_t, mesh_points_dyn, i), rot_angle);
+        get_list_element(vec3d_t, mesh_points_tf_dyn, i) = rot_y_vec(get_list_element(vec3d_t, mesh_points_tf_dyn, i), rot_angle);
+        get_list_element(vec3d_t, mesh_points_tf_dyn, i) = rot_z_vec(get_list_element(vec3d_t, mesh_points_tf_dyn, i), rot_angle);
 
-        rot_angle += 0.0001;
-        //printf("%f\n", rot_angle);
+        rot_angle += 0.001;
+        // printf("%f\n", rot_angle);
 
         /* point transation */
         /* point rotation */
 
         /* code the camera position translstion & rotation */
         /* cam translation */
-        // mesh_points_tf[i].x -= camera_pos_g.x;
-        // mesh_points_tf[i].y -= camera_pos_g.y;
-        // mesh_points_tf[i].z -= camera_pos_g.z;
-        mesh_points_tf_dyn[i].x -= camera_pos_g.x;
-        mesh_points_tf_dyn[i].y -= camera_pos_g.y;
-        mesh_points_tf_dyn[i].z -= camera_pos_g.z;
+        (get_list_element(vec3d_t, mesh_points_tf_dyn, i)).x -= camera_pos_g.x;
+        (get_list_element(vec3d_t, mesh_points_tf_dyn, i)).y -= camera_pos_g.y;
+        (get_list_element(vec3d_t, mesh_points_tf_dyn, i)).z -= camera_pos_g.z;
 
         /* TODO: cam rotation*/
-        // vec2d_t p_point = project_3dto2d(mesh_points_tf[i]);
-        vec3d_t tf_virtex = mesh_points_tf_dyn[i];
+        vec3d_t tf_virtex = (get_list_element(vec3d_t, mesh_points_tf_dyn, i));
         vec2d_t p_point = project_3dto2d(tf_virtex);
         printf("%f \n", tf_virtex.x);
-        // projected_points[i] = p_point;
-        // projected_points_dyn[i] = p_point;
-        array_push(projected_points_dyn, p_point);
+        get_list_element(vec2d_t, projected_points_dyn, i) = p_point;
     }
 }
 
@@ -150,15 +133,13 @@ void render_canvas(void)
     for (size_t i = 0; i < N_MESH_VERTICES; i++)
     {
         // vec2d_t p_point = projected_points[i];
-        vec2d_t p_point = projected_points_dyn[i];
+        vec2d_t p_point = get_list_element(vec2d_t, projected_points_dyn, i);
 
         x_pos = (p_point.x * fov_scale_factor) + (window_width / 2);
         y_pos = (p_point.y * fov_scale_factor) + (window_height / 2);
-        //printf("%f \n", x_pos);
+        // printf("%f \n", x_pos);
         draw_rect_on_buf(x_pos, y_pos, 4, 4, 0xff00ff00);
     }
-
-    array_free(projected_points_dyn);
     render_color_buf();
     /*like an update canvas call*/
     SDL_RenderPresent(renderer);
@@ -177,8 +158,9 @@ int main(void)
         render_canvas();
     }
     // free(mesh_points);
-    free(mesh_points_dyn);
-    free(mesh_points_tf_dyn);
+    destroy_list(projected_points_dyn);
+    destroy_list(mesh_points_tf_dyn);
+    destroy_list(mesh_points_dyn);
     destroy_renderer();
     printf("hi mom!  \n");
     return 0;

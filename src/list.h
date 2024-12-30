@@ -21,15 +21,16 @@ void destroy_list(list_t list);
 // typrcast the void pointer into the ptype we wants
 #define get_list_element(type, list, indx) ((type *)(list).array)[(indx)]
 
-#define push_to_list(list, element)                                                 \
-    do                                                                              \
-    {                                                                               \
-        if ((list).capacity <= (((list).cursor) + 1) * ((list).element_size))       \
-        {                                                                           \
-            (list).capacity += ((list).base_element_count) * ((list).element_size); \
-            (list).array = realloc((list).array, ((list).capacity));                \
-        }                                                                           \
-        memcpy(&((list).array[(list).cursor]), &(element), (list).element_size);        \
-        (list).cursor++;                                                            \
-                                                                                    \
+#define push_to_list(list, element)                                                                     \
+    do                                                                                                  \
+    {                                                                                                   \
+        if ((list).capacity <= (((list).cursor) + 1) * ((list).element_size))                           \
+        {                                                                                               \
+            (list).capacity += ((list).base_element_count) * ((list).element_size);                     \
+            (list).array = realloc((list).array, ((list).capacity));                                    \
+        }                                                                                               \
+        memcpy(                                                                                         \
+            ((list).array + ((list).cursor) * ((list).element_size)), &(element), (list).element_size); \
+        (list).cursor++;                                                                                \
+                                                                                                        \
     } while (0);
