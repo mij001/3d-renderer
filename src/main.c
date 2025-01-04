@@ -39,7 +39,7 @@ void setup_renderer(void)
     mesh_points_tf_dyn = list_create(sizeof(vec3d_t), 1);
 
     for (size_t i = 0; i < N_MESH_VERTICES; i++) {
-        vec3d_t point = mesh_vertices[i];
+        vec3d_t point = cube_mesh_vertices[i];
         push_to_list(mesh_points_dyn, point);
         vec2d_t p_point = { .x = point.x, .y = point.y };
         push_to_list(mesh_points_tf_dyn, point);

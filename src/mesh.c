@@ -42,10 +42,10 @@ mesh_t rndr_init_cube_mesh()
     // mesh.faces = (face_t *)malloc(sizeof(face_t) * n_faces);
 
     // replaced by dyn arrays
-    list_t vertices;
-    list_t vertices_tf;
-    list_t faces;
-    list_t vertices_pj;
+    list_t vertices = list_create(mesh.n_vertices, 1);
+    list_t vertices_tf = list_create(mesh.n_vertices, 1);
+    list_t faces = list_create(mesh.n_faces, 1);
+    list_t vertices_pj = list_create(mesh.n_vertices, 1);
 
     for (size_t i = 0; i < mesh.n_vertices; i++) {
         push_to_list(vertices, cube_mesh_vertices[i]);
@@ -69,15 +69,15 @@ mesh_t rndr_init_cube_mesh()
     return mesh;
 }
 
-void rndr_destroy_cube_mesh(mesh_t mesh)
-{
-    //     free(mesh.vertices);
-    //     free(mesh.vertices_tf);
-    //     free(mesh.faces);
+// void rndr_destroy_cube_mesh(mesh_t mesh)
+// {
+//     //     free(mesh.vertices);
+//     //     free(mesh.vertices_tf);
+//     //     free(mesh.faces);
 
-    // replaced by dyn arrays
-    free(mesh.vertices_pj);
-    free(mesh.faces);
-    free(mesh.vertices);
-    free(mesh.vertices_tf);
-}
+//     // replaced by dyn arrays
+//     free(mesh.vertices_pj);
+//     free(mesh.faces);
+//     free(mesh.vertices);
+//     free(mesh.vertices_tf);
+// }

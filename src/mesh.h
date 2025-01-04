@@ -10,10 +10,10 @@ typedef struct {
 } face_t;
 
 #define N_MESH_VERTICES 8
-extern vec3d_t mesh_vertices[N_MESH_VERTICES];
+extern vec3d_t cube_mesh_vertices[N_MESH_VERTICES];
 
 #define N_MESH_FACES (6 * 2) // 6 cube faces, 2 triangles per face
-extern face_t mesh_faces[N_MESH_FACES];
+extern face_t cube_mesh_faces[N_MESH_FACES];
 
 typedef struct {
     size_t n_vertices;
@@ -28,5 +28,5 @@ typedef struct {
 } mesh_t;
 
 mesh_t rndr_init_cube_mesh();
-void rndr_destroy_cube_mesh(mesh_t mesh);
+// void rndr_destroy_cube_mesh(mesh_t mesh);
 
