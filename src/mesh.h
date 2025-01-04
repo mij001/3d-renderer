@@ -1,6 +1,15 @@
 #pragma once
 
+#include <stdio.h>
+#include <stdint.h>
+#include <SDL2/SDL.h>
+#include "rerr.h"
 #include "vector.h"
+#include "inir_rndrr.h"
+#include "display.h"
+#include "draw.h"
+#include "mesh.h"
+#include "array.h"
 #include "list.h"
 
 typedef struct {
@@ -18,15 +27,16 @@ extern face_t cube_mesh_faces[N_MESH_FACES];
 typedef struct {
     size_t n_vertices;
     size_t n_faces;
-    list_t *vertices; /* verticies of the mesh before linear trasforming*/
-    list_t *faces; /* face virticies of the mesh as indeicies of the virticies dyn array*/
+    list_t vertices; /* verticies of the mesh before linear trasforming*/
+    list_t faces; /* face virticies of the mesh as indeicies of the virticies dyn array*/
     float scale; /* scaling factor of the mesh*/
     vec3d_t translate; /* translation vector of the mesh */
     vec3d_t rotate; /* rotation vector of the mesh */
-    list_t *vertices_tf; /* verticies of the mesh after linear trasforming*/
-    list_t *vertices_pj; /* projected verticies to the 2d screen */
+    list_t vertices_tf; /* verticies of the mesh after linear trasforming*/
+    list_t vertices_pj; /* projected verticies to the 2d screen */
 } mesh_t;
 
 mesh_t rndr_init_cube_mesh();
+void rndr_updte_mesh(mesh_t *cube_mesh, vec3d_t camera);
 // void rndr_destroy_cube_mesh(mesh_t mesh);
 

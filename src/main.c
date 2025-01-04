@@ -18,9 +18,12 @@ size_t end_loop = 1;
 
 const size_t fov_scale_factor = 700;
 
-list_t mesh_points_dyn;
-list_t mesh_points_tf_dyn;
-list_t projected_points_dyn;
+
+mesh_t cube_mesh;
+// list_t mesh_points_dyn;
+// list_t mesh_points_tf_dyn;
+// list_t projected_points_dyn;
+
 
 vec3d_t camera_pos_g;
 float rot_angle = 0;
@@ -35,16 +38,17 @@ void setup_renderer(void)
 
     camera_pos_g = camera_pos;
 
-    mesh_points_dyn = list_create(sizeof(vec3d_t), 1);
-    mesh_points_tf_dyn = list_create(sizeof(vec3d_t), 1);
-
-    for (size_t i = 0; i < N_MESH_VERTICES; i++) {
-        vec3d_t point = cube_mesh_vertices[i];
-        push_to_list(mesh_points_dyn, point);
-        vec2d_t p_point = { .x = point.x, .y = point.y };
-        push_to_list(mesh_points_tf_dyn, point);
-        push_to_list(projected_points_dyn, p_point);
-    }
+    cube_mesh = rndr_init_cube_mesh();
+    // mesh_points_dyn = list_create(sizeof(vec3d_t), 1);
+    // mesh_points_tf_dyn = list_create(sizeof(vec3d_t), 1);
+    // projected_points_dyn = list_create(sizeof(vec3d_t), 1);
+    // for (size_t i = 0; i < N_MESH_VERTICES; i++) {
+    //     vec3d_t point = cube_mesh_vertices[i];
+    //     push_to_list(mesh_points_dyn, point);
+    //     vec2d_t p_point = { .x = point.x, .y = point.y };
+    //     push_to_list(mesh_points_tf_dyn, point);
+    //     push_to_list(projected_points_dyn, p_point);
+    // }
 }
 
 void handle_events(void)
@@ -81,13 +85,13 @@ void update_system(void)
     tickes_in_prev_frame = SDL_GetTicks();
     /////////////////////////////////
 
-    projected_points_dyn = list_create(sizeof(vec3d_t), 1);
     for (size_t i = 0; i < N_MESH_VERTICES; i++) {
         /* point scaling, translation and rotations */
         /* point scaling */
-        get_list_element(vec3d_t, mesh_points_tf_dyn, i) = rot_x_vec(get_list_element(vec3d_t, mesh_points_dyn, i), rot_angle);
-        get_list_element(vec3d_t, mesh_points_tf_dyn, i) = rot_y_vec(get_list_element(vec3d_t, mesh_points_tf_dyn, i), rot_angle);
-        get_list_element(vec3d_t, mesh_points_tf_dyn, i) = rot_z_vec(get_list_element(vec3d_t, mesh_points_tf_dyn, i), rot_angle);
+        rndr_updte_mesh(&cube_mesh, camera_pos_g);
+        // get_list_element(vec3d_t, mesh_points_tf_dyn, i) = rot_x_vec(get_list_element(vec3d_t, mesh_points_dyn, i), rot_angle);
+        // get_list_element(vec3d_t, mesh_points_tf_dyn, i) = rot_y_vec(get_list_element(vec3d_t, mesh_points_tf_dyn, i), rot_angle);
+        // get_list_element(vec3d_t, mesh_points_tf_dyn, i) = rot_z_vec(get_list_element(vec3d_t, mesh_points_tf_dyn, i), rot_angle);
 
         rot_angle += 0.001;
         // printf("%f\n", rot_angle);
@@ -97,15 +101,15 @@ void update_system(void)
 
         /* code the camera position translstion & rotation */
         /* cam translation */
-        (get_list_element(vec3d_t, mesh_points_tf_dyn, i)).x -= camera_pos_g.x;
-        (get_list_element(vec3d_t, mesh_points_tf_dyn, i)).y -= camera_pos_g.y;
-        (get_list_element(vec3d_t, mesh_points_tf_dyn, i)).z -= camera_pos_g.z;
+        // (get_list_element(vec3d_t, mesh_points_tf_dyn, i)).x -= camera_pos_g.x;
+        // (get_list_element(vec3d_t, mesh_points_tf_dyn, i)).y -= camera_pos_g.y;
+        // (get_list_element(vec3d_t, mesh_points_tf_dyn, i)).z -= camera_pos_g.z;
 
-        /* TODO: cam rotation*/
-        vec3d_t tf_virtex = (get_list_element(vec3d_t, mesh_points_tf_dyn, i));
-        vec2d_t p_point = project_3dto2d(tf_virtex);
-        printf("%f \n", tf_virtex.x);
-        get_list_element(vec2d_t, projected_points_dyn, i) = p_point;
+        // /* TODO: cam rotation*/
+        // vec3d_t tf_virtex = (get_list_element(vec3d_t, mesh_points_tf_dyn, i));
+        // vec2d_t p_point = project_3dto2d(tf_virtex);
+        // printf("%f \n", tf_virtex.x);
+        // get_list_element(vec2d_t, projected_points_dyn, i) = p_point;
     }
 }
 
@@ -118,7 +122,7 @@ void render_canvas(void)
     float x_pos, y_pos;
     for (size_t i = 0; i < N_MESH_VERTICES; i++) {
         // vec2d_t p_point = projected_points[i];
-        vec2d_t p_point = get_list_element(vec2d_t, projected_points_dyn, i);
+        vec2d_t p_point = get_list_element(vec2d_t, cube_mesh.vertices_pj/*projected_points_dyn*/, i);
 
         x_pos = (p_point.x * fov_scale_factor) + (window_width / 2);
         y_pos = (p_point.y * fov_scale_factor) + (window_height / 2);
@@ -142,9 +146,9 @@ int main(void)
         render_canvas();
     }
     // free(mesh_points);
-    destroy_list(projected_points_dyn);
-    destroy_list(mesh_points_tf_dyn);
-    destroy_list(mesh_points_dyn);
+    // destroy_list(projected_points_dyn);
+    // destroy_list(mesh_points_tf_dyn);
+    // destroy_list(mesh_points_dyn);
     destroy_renderer();
     printf("hi mom!  \n");
     return 0;
