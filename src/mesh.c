@@ -94,15 +94,15 @@ void rndr_updte_mesh(mesh_t *cube_mesh, vec3d_t camera)
     }
 }
 
-void rndr_destroy_cube_mesh(mesh_t *mesh)
+void rndr_destroy_cube_mesh(mesh_t mesh)
 {
     //     free(mesh.vertices);
     //     free(mesh.vertices_tf);
     //     free(mesh.faces);
 
     // replaced by dyn arrays
-    destroy_list(mesh->vertices_pj);
-    destroy_list(mesh->faces);
-    destroy_list(mesh->vertices);
-    destroy_list(mesh->vertices_tf);
+    destroy_list(mesh.vertices_pj);
+    destroy_list(mesh.faces);
+    destroy_list(mesh.vertices);
+    destroy_list(mesh.vertices_tf);
 }

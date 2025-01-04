@@ -5,10 +5,11 @@
 #include "vector.h"
 #include "inir_rndrr.h"
 #include "display.h"
-#include "draw.h"
 #include "mesh.h"
+#include "draw.h"
 #include "array.h"
 #include "list.h"
+#include "face.h"
 
 const int FPS = 60;
 const int FPS_MS = 1000 / FPS;
@@ -121,16 +122,41 @@ void render_canvas(void)
     clear_color_buf(0xff000000);
 
     /* scale the projection to be visible and translate to middle */
-    float x_pos, y_pos;
-    for (size_t i = 0; i < N_MESH_VERTICES; i++) {
+    //float x_pos, y_pos;
+    for (size_t i = 0; i < cube_mesh_g.n_vertices; i++) {
         // vec2d_t p_point = projected_points[i];
-        vec2d_t p_point = get_list_element(vec2d_t, cube_mesh_g.vertices_pj/*projected_points_dyn*/, i);
+        // vec2d_t p_point = get_list_element(vec2d_t, cube_mesh_g.vertices_pj/*projected_points_dyn*/, i);
 
-        x_pos = (p_point.x * fov_scale_factor) + (window_width / 2);
-        y_pos = (p_point.y * fov_scale_factor) + (window_height / 2);
+        // x_pos = (p_point.x * fov_scale_factor) + (window_width / 2);
+        // y_pos = (p_point.y * fov_scale_factor) + (window_height / 2);
+        // //draw_rect_on_buf(x_pos, y_pos, 4, 4, 0xff00ff00);
         // printf("%f \n", x_pos);
-        draw_rect_on_buf(x_pos, y_pos, 4, 4, 0xff00ff00);
+
+        // face_t face2draw = get_list_element(face_t, cube_mesh_g.faces, i);
+        // draw_face_on_grid(face2draw, cube_mesh_g.vertices_pj, 0xff00ff00);
+        // /////////////////////////////////////
     }
+
+    vec2d_t p1 = { .x = 100, .y = 500 };
+    vec2d_t p2 = { .x = 650, .y = 600 };
+    vec2d_t p3 = { .x = 456, .y = 600 };
+    /////////////////////////////////////
+    /////////////////////////////////////
+    draw_point_on_buf(p1.x, p1.y, 0xff00ff00);
+    draw_rect_on_buf(p1.x, p1.y, 4, 4, 0xff00ff00);
+
+    draw_point_on_buf(p2.x, p2.y, 0xff00ff00);
+    draw_rect_on_buf(p2.x, p2.y, 4, 4, 0xff00ff00);
+
+    draw_point_on_buf(p3.x, p3.y, 0xff00ff00);
+    draw_rect_on_buf(p3.x, p3.y, 4, 4, 0xff00ff00);
+
+    // draw_line_on_buf(p1, p2, 0xff00ff00);
+    // draw_line_on_buf(p1, p3, 0xff00ff00);
+    // draw_line_on_buf(p2, p3, 0xff00ff00);
+
+    draw_triangle_on_grid(p1, p2, p3, 0xff00ff00);
+
     render_color_buf();
     /*like an update canvas call*/
     SDL_RenderPresent(renderer);
@@ -151,6 +177,7 @@ int main(void)
     // destroy_list(projected_points_dyn);
     // destroy_list(mesh_points_tf_dyn);
     // destroy_list(mesh_points_dyn);
+    rndr_destroy_cube_mesh(cube_mesh_g);
     destroy_renderer();
     printf("hi mom!  \n");
     return 0;

@@ -58,6 +58,8 @@
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "C_Cpp.default.compilerPath": "/usr/bin/gcc",
   "files.associations": {
-    "stdio.h": "c"
+    "stdio.h": "c",
+    "draw.h": "c",
+    "mesh.h": "c"
   }
 }

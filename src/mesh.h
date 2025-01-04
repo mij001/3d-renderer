@@ -8,15 +8,10 @@
 #include "inir_rndrr.h"
 #include "display.h"
 #include "draw.h"
-#include "mesh.h"
+#include "face.h"
 #include "array.h"
 #include "list.h"
 
-typedef struct {
-    int a;
-    int b;
-    int c;
-} face_t;
 
 #define N_MESH_VERTICES 8
 extern vec3d_t cube_mesh_vertices[N_MESH_VERTICES];
@@ -38,5 +33,5 @@ typedef struct {
 
 mesh_t rndr_init_cube_mesh();
 void rndr_updte_mesh(mesh_t *cube_mesh, vec3d_t camera);
-// void rndr_destroy_cube_mesh(mesh_t mesh);
+void rndr_destroy_cube_mesh(mesh_t mesh);
 

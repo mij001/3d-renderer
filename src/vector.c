@@ -1,6 +1,6 @@
 #include "vector.h"
 
-vec3d_t scale_vec (vec3d_t vector, float scaler)
+vec3d_t scale_vec(vec3d_t vector, float scaler)
 {
     vec3d_t scaled_vec =
     {
@@ -11,7 +11,7 @@ vec3d_t scale_vec (vec3d_t vector, float scaler)
     return scaled_vec;
 }
 
-vec3d_t translate_vec (vec3d_t vector, vec3d_t translator)
+vec3d_t translate_vec(vec3d_t vector, vec3d_t translator)
 {
     vec3d_t scaled_vec =
     {
@@ -22,7 +22,7 @@ vec3d_t translate_vec (vec3d_t vector, vec3d_t translator)
     return scaled_vec;
 }
 
-vec3d_t rot_z_vec (vec3d_t vector, float angle)
+vec3d_t rot_z_vec(vec3d_t vector, float angle)
 {
     vec3d_t rotated_vec =
     {
@@ -33,7 +33,7 @@ vec3d_t rot_z_vec (vec3d_t vector, float angle)
     return rotated_vec;
 }
 
-vec3d_t rot_y_vec (vec3d_t vector, float angle)
+vec3d_t rot_y_vec(vec3d_t vector, float angle)
 {
     vec3d_t rotated_vec =
     {
@@ -44,7 +44,7 @@ vec3d_t rot_y_vec (vec3d_t vector, float angle)
     return rotated_vec;
 }
 
-vec3d_t rot_x_vec (vec3d_t vector, float angle)
+vec3d_t rot_x_vec(vec3d_t vector, float angle)
 {
     vec3d_t rotated_vec =
     {
@@ -53,4 +53,17 @@ vec3d_t rot_x_vec (vec3d_t vector, float angle)
         .z = vector.z * cos(angle) + vector.y * sin(angle)
     };
     return rotated_vec;
+}
+float vec2d_line_distance(vec2d_t p1, vec2d_t p2)
+{
+    float abs_x = fabsf(p1.x - p2.x);
+    float abs_y = fabsf(p1.y - p2.y);
+    return sqrt(abs_x * abs_x + abs_y * abs_y);
+}
+float vec3d_line_distance(vec2d_t p1, vec2d_t p2)
+{
+    float abs_x = fabsf(p1.x - p2.x);
+    float abs_y = fabsf(p1.y - p2.y);
+    float abs_z = fabsf(p1.y - p2.y);
+    return sqrt(abs_x * abs_x + abs_y * abs_y + abs_z * abs_z);
 }
