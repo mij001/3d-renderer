@@ -122,14 +122,14 @@ void render_canvas(void)
     clear_color_buf(0xff000000);
 
     /* scale the projection to be visible and translate to middle */
-    //float x_pos, y_pos;
+    float x_pos, y_pos;
     for (size_t i = 0; i < cube_mesh_g.n_vertices; i++) {
         // vec2d_t p_point = projected_points[i];
-        // vec2d_t p_point = get_list_element(vec2d_t, cube_mesh_g.vertices_pj/*projected_points_dyn*/, i);
+        vec2d_t p_point = get_list_element(vec2d_t, cube_mesh_g.vertices_pj/*projected_points_dyn*/, i);
 
-        // x_pos = (p_point.x * fov_scale_factor) + (window_width / 2);
-        // y_pos = (p_point.y * fov_scale_factor) + (window_height / 2);
-        // //draw_rect_on_buf(x_pos, y_pos, 4, 4, 0xff00ff00);
+        x_pos = (p_point.x * fov_scale_factor) + (window_width / 2);
+        y_pos = (p_point.y * fov_scale_factor) + (window_height / 2);
+        draw_rect_on_buf(x_pos, y_pos, 4, 4, 0xff00ff00);
         // printf("%f \n", x_pos);
 
         // face_t face2draw = get_list_element(face_t, cube_mesh_g.faces, i);
