@@ -62,6 +62,10 @@ mesh_t rndr_init_cube_mesh()
     vec3d_t translate = { 0 };
     vec3d_t rotate = { 0 };
 
+    mesh.vertices = vertices;
+    mesh.vertices_tf = vertices_tf;
+    mesh.faces = faces;
+    mesh.vertices_pj = vertices_pj;
     mesh.scale = scale;
     mesh.translate = translate;
     mesh.rotate = rotate;
@@ -72,7 +76,8 @@ mesh_t rndr_init_cube_mesh()
 void rndr_updte_mesh(mesh_t *cube_mesh, vec3d_t camera)
 {
     for (size_t i = 0; i < cube_mesh->n_vertices; i++) {
-        get_list_element(vec3d_t, cube_mesh->vertices_tf, i) = rot_x_vec(get_list_element(vec3d_t, cube_mesh->vertices, i), cube_mesh->rotate.x);
+        vec3d_t pos = get_list_element(vec3d_t, cube_mesh->vertices, i);
+        get_list_element(vec3d_t, cube_mesh->vertices_tf, i) = rot_x_vec(pos, cube_mesh->rotate.x);
         get_list_element(vec3d_t, cube_mesh->vertices_tf, i) = rot_y_vec(get_list_element(vec3d_t, cube_mesh->vertices_tf, i), cube_mesh->rotate.y);
         get_list_element(vec3d_t, cube_mesh->vertices_tf, i) = rot_z_vec(get_list_element(vec3d_t, cube_mesh->vertices_tf, i), cube_mesh->rotate.z);
 
