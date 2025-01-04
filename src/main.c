@@ -30,19 +30,18 @@ void setup_renderer(void)
     vec3d_t camera_pos = {
         .x = 0,
         .y = 0,
-        .z = -5};
+        .z = -5
+    };
 
     camera_pos_g = camera_pos;
 
     mesh_points_dyn = list_create(sizeof(vec3d_t), 1);
     mesh_points_tf_dyn = list_create(sizeof(vec3d_t), 1);
 
-    for (size_t i = 0; i < N_MESH_VERTICES; i++)
-    {
-
+    for (size_t i = 0; i < N_MESH_VERTICES; i++) {
         vec3d_t point = mesh_vertices[i];
         push_to_list(mesh_points_dyn, point);
-        vec2d_t p_point = {.x = point.x, .y = point.y};
+        vec2d_t p_point = { .x = point.x, .y = point.y };
         push_to_list(mesh_points_tf_dyn, point);
         push_to_list(projected_points_dyn, p_point);
     }
@@ -53,16 +52,14 @@ void handle_events(void)
     SDL_Event rndrr_events;
     SDL_PollEvent(&rndrr_events);
 
-    switch (rndrr_events.type)
-    {
+    switch (rndrr_events.type) {
     case SDL_QUIT:
         end_loop = 1;
         break;
 
     case SDL_KEYDOWN:
     {
-        if (rndrr_events.key.keysym.sym == SDLK_ESCAPE)
-        {
+        if (rndrr_events.key.keysym.sym == SDLK_ESCAPE) {
             end_loop = 1;
         }
     }
@@ -78,16 +75,14 @@ void update_system(void)
     /* add delay to updating loop to get a constant fps */
     int sleep_time = FPS_MS - (SDL_GetTicks() - tickes_in_prev_frame);
     // sleep the prodcess
-    if (0 <= sleep_time && sleep_time <= FPS_MS)
-    {
+    if (0 <= sleep_time && sleep_time <= FPS_MS) {
         SDL_Delay(sleep_time);
     }
     tickes_in_prev_frame = SDL_GetTicks();
     /////////////////////////////////
 
     projected_points_dyn = list_create(sizeof(vec3d_t), 1);
-    for (size_t i = 0; i < N_MESH_VERTICES; i++)
-    {
+    for (size_t i = 0; i < N_MESH_VERTICES; i++) {
         /* point scaling, translation and rotations */
         /* point scaling */
         get_list_element(vec3d_t, mesh_points_tf_dyn, i) = rot_x_vec(get_list_element(vec3d_t, mesh_points_dyn, i), rot_angle);
@@ -121,8 +116,7 @@ void render_canvas(void)
 
     /* scale the projection to be visible and translate to middle */
     float x_pos, y_pos;
-    for (size_t i = 0; i < N_MESH_VERTICES; i++)
-    {
+    for (size_t i = 0; i < N_MESH_VERTICES; i++) {
         // vec2d_t p_point = projected_points[i];
         vec2d_t p_point = get_list_element(vec2d_t, projected_points_dyn, i);
 
@@ -142,8 +136,7 @@ int main(void)
 
     setup_renderer();
 
-    while (!end_loop)
-    {
+    while (!end_loop) {
         handle_events();
         update_system();
         render_canvas();
