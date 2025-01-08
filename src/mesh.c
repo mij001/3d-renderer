@@ -32,7 +32,7 @@ face_t cube_mesh_faces[N_MESH_FACES] = {
     {.a = 6, .b = 1, .c = 4}
 };
 
-mesh_t rndr_init_cube_mesh()
+mesh_t rndr_load_cube_mesh()
 {
     mesh_t mesh;
     mesh.n_vertices = N_MESH_VERTICES;
@@ -94,7 +94,7 @@ void rndr_updte_mesh(mesh_t *cube_mesh, vec3d_t camera)
     }
 }
 
-void rndr_destroy_cube_mesh(mesh_t mesh)
+void rndr_destroy_mesh(mesh_t mesh)
 {
     //     free(mesh.vertices);
     //     free(mesh.vertices_tf);
@@ -105,4 +105,80 @@ void rndr_destroy_cube_mesh(mesh_t mesh)
     destroy_list(mesh.faces);
     destroy_list(mesh.vertices);
     destroy_list(mesh.vertices_tf);
+}
+
+mesh_t rndr_load_obj_mesh(const char *filename)
+{
+    mesh_t mesh;
+
+    FILE *fp;
+    char *read_line = NULL;
+    size_t n_chars2reaad = 256;
+
+    list_t vertices = list_create(sizeof(vec3d_t), 1);
+    list_t vertices_tf = list_create(sizeof(vec3d_t), 1);
+    list_t faces = list_create(sizeof(face_t), 1);
+    list_t vertices_pj = list_create(sizeof(vec2d_t), 1);
+
+    fp = fopen(filename, "rw");
+    assert(fp != NULL);
+
+    mesh.n_vertices = 0;
+    mesh.n_faces = 0;
+
+    while (getline(&read_line, &n_chars2reaad, fp) != -1) {
+
+        char type[256];
+        float vertex_x;
+        float vertex_y;
+        float vertex_z;
+
+        size_t face_a;
+        size_t face_b;
+        size_t face_c;
+        if (read_line[0] == 'v') {
+            sscanf(read_line, "%s %e %e %e", type, &vertex_x, &vertex_y, &vertex_z);
+
+            vec3d_t mesh_vertices = { .x = vertex_x, .y = vertex_y,.z = vertex_z };
+            push_to_list(vertices, mesh_vertices);
+            push_to_list(vertices_tf, mesh_vertices);
+
+            vec2d_t projected0 = { 0 };
+            push_to_list(vertices_pj, projected0);
+
+            mesh.n_vertices++;
+
+
+            // printf("%s - %f\n", type, vertex_x);
+        }
+        else if (read_line[0] == 'f') {
+            sscanf(read_line, "%s %lu %lu %lu", type, &face_a, &face_b, &face_c);
+            face_t mesh_faces = { .a = face_a,.b = face_b,.c = face_c };
+            push_to_list(faces, mesh_faces);
+
+            mesh.n_faces++;
+
+
+            // printf("%s - %d\n", type, face_a);
+        }
+
+        float scale = 0;
+        vec3d_t translate = { 0 };
+        vec3d_t rotate = { 0 };
+
+        mesh.vertices = vertices;
+        mesh.vertices_tf = vertices_tf;
+        mesh.faces = faces;
+        mesh.vertices_pj = vertices_pj;
+        mesh.scale = scale;
+        mesh.translate = translate;
+        mesh.rotate = rotate;
+
+    }
+
+
+    if (read_line) {
+        free(read_line);
+    }
+    return mesh;
 }

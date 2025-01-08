@@ -1,7 +1,7 @@
 #include "camera.h"
 
 
-const size_t fov_scale_factor = 700;
+const size_t fov_scale_factor = 10000;
 
 vec2d_t rndr_camera_tf(vec2d_t p_point)
 {

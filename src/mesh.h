@@ -1,4 +1,5 @@
 #pragma once
+#define  _GNU_SOURCE
 
 #include <stdio.h>
 #include <stdint.h>
@@ -11,6 +12,10 @@
 #include "face.h"
 #include "array.h"
 #include "list.h"
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
+
 
 
 #define N_MESH_VERTICES 8
@@ -31,7 +36,7 @@ typedef struct {
     list_t vertices_pj; /* projected verticies to the 2d screen */
 } mesh_t;
 
-mesh_t rndr_init_cube_mesh();
+mesh_t rndr_load_cube_mesh();
 void rndr_updte_mesh(mesh_t *cube_mesh, vec3d_t camera);
-void rndr_destroy_cube_mesh(mesh_t mesh);
-
+void rndr_destroy_mesh(mesh_t mesh);
+mesh_t rndr_load_obj_mesh(const char *filename);

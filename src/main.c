@@ -18,7 +18,7 @@ size_t tickes_in_prev_frame = 0;
 
 size_t end_loop = 1;
 
-mesh_t cube_mesh_g;
+mesh_t obj_mesh_g;
 // list_t mesh_points_dyn;
 // list_t mesh_points_tf_dyn;
 // list_t projected_points_dyn;
@@ -37,7 +37,8 @@ void setup_renderer(void)
 
     camera_pos_g = camera_pos;
 
-    cube_mesh_g = rndr_init_cube_mesh();
+    // obj_mesh_g = rndr_load_cube_mesh();
+    obj_mesh_g = rndr_load_obj_mesh("/home/inomal/projects/3d-graphics-fs/3d-renderer/src/bunny.obj");
     // mesh_points_dyn = list_create(sizeof(vec3d_t), 1);
     // mesh_points_tf_dyn = list_create(sizeof(vec3d_t), 1);
     // projected_points_dyn = list_create(sizeof(vec3d_t), 1);
@@ -87,14 +88,14 @@ void update_system(void)
     for (size_t i = 0; i < N_MESH_VERTICES; i++) {
         /* point scaling, translation and rotations */
         /* point scaling */
-        rndr_updte_mesh(&cube_mesh_g, camera_pos_g);
+        rndr_updte_mesh(&obj_mesh_g, camera_pos_g);
         // get_list_element(vec3d_t, mesh_points_tf_dyn, i) = rot_x_vec(get_list_element(vec3d_t, mesh_points_dyn, i), rot_angle);
         // get_list_element(vec3d_t, mesh_points_tf_dyn, i) = rot_y_vec(get_list_element(vec3d_t, mesh_points_tf_dyn, i), rot_angle);
         // get_list_element(vec3d_t, mesh_points_tf_dyn, i) = rot_z_vec(get_list_element(vec3d_t, mesh_points_tf_dyn, i), rot_angle);
 
-        cube_mesh_g.rotate.x += 0.0001;
-        cube_mesh_g.rotate.y += 0.0001;
-        cube_mesh_g.rotate.z += 0.0001;
+        obj_mesh_g.rotate.x += 0.0001;
+        obj_mesh_g.rotate.y += 0.01;
+        obj_mesh_g.rotate.z += 0.0001;
         // printf("%f\n", rot_angle);
 
         /* point transation */
@@ -120,20 +121,20 @@ void render_canvas(void)
     clear_color_buf(0xff000000);
 
     /* scale the projection to be visible and translate to middle */
-    for (size_t i = 0; i < cube_mesh_g.n_vertices; i++) {
+    for (size_t i = 0; i < obj_mesh_g.n_vertices; i++) {
         // vec2d_t p_point = projected_points[i];
-        vec2d_t p_point = rndr_camera_tf(get_list_element(vec2d_t, cube_mesh_g.vertices_pj, i));
+        vec2d_t p_point = rndr_camera_tf(get_list_element(vec2d_t, obj_mesh_g.vertices_pj, i));
 
         draw_rect_on_buf(p_point.x, p_point.y, 4, 4, 0xff00ff00);
         // printf("%f \n", x_pos);
         // /////////////////////////////////////
     }
-    for (size_t i = 1; i < cube_mesh_g.n_faces; i++) {
+    for (size_t i = 1; i < obj_mesh_g.n_faces; i++) {
         // vec2d_t p_point = projected_points[i];
-        face_t face = get_list_element(face_t, cube_mesh_g.faces, i);
-        vec2d_t p_point_a = rndr_camera_tf(get_list_element(vec2d_t, cube_mesh_g.vertices_pj, face.a - 1));
-        vec2d_t p_point_b = rndr_camera_tf(get_list_element(vec2d_t, cube_mesh_g.vertices_pj, face.b - 1));
-        vec2d_t p_point_c = rndr_camera_tf(get_list_element(vec2d_t, cube_mesh_g.vertices_pj, face.c - 1));
+        face_t face = get_list_element(face_t, obj_mesh_g.faces, i);
+        vec2d_t p_point_a = rndr_camera_tf(get_list_element(vec2d_t, obj_mesh_g.vertices_pj, face.a - 1));
+        vec2d_t p_point_b = rndr_camera_tf(get_list_element(vec2d_t, obj_mesh_g.vertices_pj, face.b - 1));
+        vec2d_t p_point_c = rndr_camera_tf(get_list_element(vec2d_t, obj_mesh_g.vertices_pj, face.c - 1));
 
         draw_line_on_buf(p_point_a, p_point_b, 0xff00ff00);
         draw_line_on_buf(p_point_a, p_point_c, 0xff0000ff);
@@ -180,7 +181,7 @@ int main(void)
     // destroy_list(projected_points_dyn);
     // destroy_list(mesh_points_tf_dyn);
     // destroy_list(mesh_points_dyn);
-    rndr_destroy_cube_mesh(cube_mesh_g);
+    rndr_destroy_mesh(obj_mesh_g);
     destroy_renderer();
     printf("hi mom!  \n");
     return 0;
