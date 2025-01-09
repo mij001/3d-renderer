@@ -40,3 +40,5 @@ mesh_t rndr_load_cube_mesh();
 void rndr_updte_mesh(mesh_t *cube_mesh, vec3d_t camera);
 void rndr_destroy_mesh(mesh_t mesh);
 mesh_t rndr_load_obj_mesh(const char *filename);
+
+vec3d_t get_face_normal(face_t face, list_t verticiess);

@@ -182,3 +182,12 @@ mesh_t rndr_load_obj_mesh(const char *filename)
     }
     return mesh;
 }
+
+vec3d_t get_face_normal(face_t face, list_t verticiess)
+{
+    return get_normal_vec(
+        get_list_element(vec3d_t, verticiess, face.a),
+        get_list_element(vec3d_t, verticiess, face.b),
+        get_list_element(vec3d_t, verticiess, face.c)
+    );
+}

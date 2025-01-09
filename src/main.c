@@ -31,7 +31,7 @@ void setup_renderer(void)
 {
     vec3d_t camera_pos = {
         .x = 0,
-        .y = 0,
+        .y = -0.1,
         .z = -5
     };
 
@@ -39,6 +39,7 @@ void setup_renderer(void)
 
     // obj_mesh_g = rndr_load_cube_mesh();
     obj_mesh_g = rndr_load_obj_mesh("/home/inomal/projects/3d-graphics-fs/3d-renderer/src/bunny.obj");
+    obj_mesh_g.rotate.z = 3.14;
     // mesh_points_dyn = list_create(sizeof(vec3d_t), 1);
     // mesh_points_tf_dyn = list_create(sizeof(vec3d_t), 1);
     // projected_points_dyn = list_create(sizeof(vec3d_t), 1);
@@ -123,9 +124,9 @@ void render_canvas(void)
     /* scale the projection to be visible and translate to middle */
     for (size_t i = 0; i < obj_mesh_g.n_vertices; i++) {
         // vec2d_t p_point = projected_points[i];
-        vec2d_t p_point = rndr_camera_tf(get_list_element(vec2d_t, obj_mesh_g.vertices_pj, i));
+        //vec2d_t p_point = rndr_camera_tf(get_list_element(vec2d_t, obj_mesh_g.vertices_pj, i));
 
-        draw_rect_on_buf(p_point.x, p_point.y, 4, 4, 0xff00ff00);
+        //draw_rect_on_buf(p_point.x, p_point.y, 4, 4, 0xff00ff00);
         // printf("%f \n", x_pos);
         // /////////////////////////////////////
     }

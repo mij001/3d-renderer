@@ -35,7 +35,7 @@ void draw_rect_on_buf(int x, int y, size_t width, size_t height, uint32_t color)
 void draw_point_on_buf(int x, int y, uint32_t color)
 {
     /* check for screen bounds */
-    if (0 <= x && x <= (int)window_width && 0 <= y && y <= (int)window_height) {
+    if (0 <= x && x < (int)window_width && 0 <= y && y < (int)window_height) {
         color_buf[(window_width * y) + x] = color;
     }
 }
