@@ -31,15 +31,17 @@ void setup_renderer(void)
 {
     vec3d_t camera_pos = {
         .x = 0,
-        .y = -0.1,
-        .z = -5
+        .y = 0,
+        .z = 0
     };
 
     camera_pos_g = camera_pos;
 
     // obj_mesh_g = rndr_load_cube_mesh();
-    obj_mesh_g = rndr_load_obj_mesh("/home/inomal/projects/3d-graphics-fs/3d-renderer/src/bunny.obj");
+
+    obj_mesh_g = rndr_load_obj_mesh("/home/inomal/projects/3d-graphics-fs/3d-renderer/src/f22.obj");
     obj_mesh_g.rotate.z = 3.14;
+
     // mesh_points_dyn = list_create(sizeof(vec3d_t), 1);
     // mesh_points_tf_dyn = list_create(sizeof(vec3d_t), 1);
     // projected_points_dyn = list_create(sizeof(vec3d_t), 1);
@@ -95,8 +97,8 @@ void update_system(void)
         // get_list_element(vec3d_t, mesh_points_tf_dyn, i) = rot_z_vec(get_list_element(vec3d_t, mesh_points_tf_dyn, i), rot_angle);
 
         obj_mesh_g.rotate.x += 0.0001;
-        obj_mesh_g.rotate.y += 0.01;
-        obj_mesh_g.rotate.z += 0.0001;
+        // obj_mesh_g.rotate.y += 0.001;
+        // obj_mesh_g.rotate.z += 0.001;
         // printf("%f\n", rot_angle);
 
         /* point transation */
@@ -130,16 +132,25 @@ void render_canvas(void)
         // printf("%f \n", x_pos);
         // /////////////////////////////////////
     }
-    for (size_t i = 1; i < obj_mesh_g.n_faces; i++) {
+    for (size_t i = 0; i < obj_mesh_g.n_faces; i++) {
         // vec2d_t p_point = projected_points[i];
         face_t face = get_list_element(face_t, obj_mesh_g.faces, i);
+
         vec2d_t p_point_a = rndr_camera_tf(get_list_element(vec2d_t, obj_mesh_g.vertices_pj, face.a - 1));
         vec2d_t p_point_b = rndr_camera_tf(get_list_element(vec2d_t, obj_mesh_g.vertices_pj, face.b - 1));
         vec2d_t p_point_c = rndr_camera_tf(get_list_element(vec2d_t, obj_mesh_g.vertices_pj, face.c - 1));
+        if (1 != rndr_is_cullable(face, obj_mesh_g.vertices_tf, camera_pos_g)) {
 
-        draw_line_on_buf(p_point_a, p_point_b, 0xff00ff00);
-        draw_line_on_buf(p_point_a, p_point_c, 0xff0000ff);
-        draw_line_on_buf(p_point_c, p_point_b, 0xffff0000);
+            draw_line_on_buf(p_point_a, p_point_b, 0xff00ff00);
+            draw_line_on_buf(p_point_a, p_point_c, 0xff00ff00);
+            draw_line_on_buf(p_point_c, p_point_b, 0xff00ff00);
+        }
+        else {
+            // draw_line_on_buf(p_point_a, p_point_b, 0xffff0000);
+            // draw_line_on_buf(p_point_a, p_point_c, 0xffff0000);
+            // draw_line_on_buf(p_point_c, p_point_b, 0xffff0000);
+
+        }
     }
 
     // vec2d_t p1 = { .x = 100, .y = 500 };

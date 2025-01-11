@@ -163,5 +163,5 @@ vec3d_t get_normal_vec(vec3d_t va, vec3d_t vb, vec3d_t vc)
 {
     vec3d_t ab = vec3d_sub(vb, va);
     vec3d_t ac = vec3d_sub(vc, va);
-    return vec3d_crossp(va, vc);
+    return vec3d_crossp(ab, ac);
 }

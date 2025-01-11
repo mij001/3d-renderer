@@ -17,3 +17,4 @@ typedef struct {
     int b;
     int c;
 } face_t;
+

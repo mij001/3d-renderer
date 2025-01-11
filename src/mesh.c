@@ -83,7 +83,7 @@ void rndr_updte_mesh(mesh_t *cube_mesh, vec3d_t camera)
 
         (get_list_element(vec3d_t, cube_mesh->vertices_tf, i)).x -= camera.x;
         (get_list_element(vec3d_t, cube_mesh->vertices_tf, i)).y -= camera.y;
-        (get_list_element(vec3d_t, cube_mesh->vertices_tf, i)).z -= camera.z;
+        (get_list_element(vec3d_t, cube_mesh->vertices_tf, i)).z -= camera.z - (5);
         /* TODO: cam rotation*/
 
         vec3d_t tf_virtex = (get_list_element(vec3d_t, cube_mesh->vertices_tf, i));
@@ -133,10 +133,18 @@ mesh_t rndr_load_obj_mesh(const char *filename)
         float vertex_y;
         float vertex_z;
 
+        size_t vn_a;
+        size_t vn_b;
+        size_t vn_c;
+
+        size_t vt_a;
+        size_t vt_b;
+        size_t vt_c;
+
         size_t face_a;
         size_t face_b;
         size_t face_c;
-        if (read_line[0] == 'v') {
+        if (strstr(read_line, "v ") != NULL) {
             sscanf(read_line, "%s %e %e %e", type, &vertex_x, &vertex_y, &vertex_z);
 
             vec3d_t mesh_vertices = { .x = vertex_x, .y = vertex_y,.z = vertex_z };
@@ -152,13 +160,18 @@ mesh_t rndr_load_obj_mesh(const char *filename)
             // printf("%s - %f\n", type, vertex_x);
         }
         else if (read_line[0] == 'f') {
-            sscanf(read_line, "%s %lu %lu %lu", type, &face_a, &face_b, &face_c);
-            face_t mesh_faces = { .a = face_a,.b = face_b,.c = face_c };
-            push_to_list(faces, mesh_faces);
-
-            mesh.n_faces++;
-
-
+            if (strstr(read_line, "/") != NULL) {
+                sscanf(read_line, "%s %lu/%lu/%lu %lu/%lu/%lu %lu/%lu/%lu", type, &face_a, &vt_a, &vn_a, &face_b, &vt_b, &vn_b, &face_c, &vt_c, &vn_c);
+                face_t mesh_faces = { .a = face_a,.b = face_b,.c = face_c };
+                push_to_list(faces, mesh_faces);
+                mesh.n_faces++;
+            }
+            else {
+                sscanf(read_line, "%s %lu %lu %lu", type, &face_a, &face_b, &face_c);
+                face_t mesh_faces = { .a = face_a,.b = face_b,.c = face_c };
+                push_to_list(faces, mesh_faces);
+                mesh.n_faces++;
+            }
             // printf("%s - %d\n", type, face_a);
         }
 
@@ -186,8 +199,17 @@ mesh_t rndr_load_obj_mesh(const char *filename)
 vec3d_t get_face_normal(face_t face, list_t verticiess)
 {
     return get_normal_vec(
-        get_list_element(vec3d_t, verticiess, face.a),
-        get_list_element(vec3d_t, verticiess, face.b),
-        get_list_element(vec3d_t, verticiess, face.c)
+        get_list_element(vec3d_t, verticiess, face.a - 1),
+        get_list_element(vec3d_t, verticiess, face.b - 1),
+        get_list_element(vec3d_t, verticiess, face.c - 1)
     );
+}
+
+int rndr_is_cullable(face_t face, list_t verticiess, vec3d_t cam_pos)
+{
+    vec3d_t face_norm = get_face_normal(face, verticiess);
+    vec3d_t cam_ray = vec3d_sub(cam_pos, get_list_element(vec3d_t, verticiess, face.a - 1));
+    float cam_ray_allignment = vec3d_dotp(face_norm, cam_ray);
+    int cullability = (cam_ray_allignment <= 0) ? 1 : 0;
+    return cullability;
 }
