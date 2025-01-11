@@ -39,7 +39,7 @@ void setup_renderer(void)
 
     // obj_mesh_g = rndr_load_cube_mesh();
 
-    obj_mesh_g = rndr_load_obj_mesh("/home/inomal/projects/3d-graphics-fs/3d-renderer/src/f22.obj");
+    obj_mesh_g = rndr_load_obj_mesh("/home/inomal/projects/3d-graphics-fs/3d-renderer/src/samples/bunny.obj");
     obj_mesh_g.rotate.z = 3.14;
 
     // mesh_points_dyn = list_create(sizeof(vec3d_t), 1);
@@ -96,9 +96,9 @@ void update_system(void)
         // get_list_element(vec3d_t, mesh_points_tf_dyn, i) = rot_y_vec(get_list_element(vec3d_t, mesh_points_tf_dyn, i), rot_angle);
         // get_list_element(vec3d_t, mesh_points_tf_dyn, i) = rot_z_vec(get_list_element(vec3d_t, mesh_points_tf_dyn, i), rot_angle);
 
-        obj_mesh_g.rotate.x += 0.0001;
-        // obj_mesh_g.rotate.y += 0.001;
-        // obj_mesh_g.rotate.z += 0.001;
+        obj_mesh_g.rotate.x += 0.001;
+        obj_mesh_g.rotate.y += 0.001;
+        obj_mesh_g.rotate.z += 0.0001;
         // printf("%f\n", rot_angle);
 
         /* point transation */
