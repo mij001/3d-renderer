@@ -60,6 +60,7 @@
   "files.associations": {
     "stdio.h": "c",
     "draw.h": "c",
-    "mesh.h": "c"
+    "mesh.h": "c",
+    "camera.h": "c"
   }
 }

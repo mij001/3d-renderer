@@ -88,7 +88,7 @@ void rndr_updte_mesh(mesh_t *cube_mesh, vec3d_t camera)
 
         vec3d_t tf_virtex = (get_list_element(vec3d_t, cube_mesh->vertices_tf, i));
         vec2d_t p_point = project_3dto2d(tf_virtex);
-        printf("%f \n", tf_virtex.x);
+        // printf("%f \n", tf_virtex.x);
         get_list_element(vec2d_t, cube_mesh->vertices_pj, i) = p_point;
 
     }
