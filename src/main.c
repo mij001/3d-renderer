@@ -11,11 +11,12 @@
 #include "list.h"
 #include "face.h"
 #include "camera.h"
+#include "matrix.h"
 
 
 #define TEST_FILL_TRIANGLEn
 
-const int FPS = 4;
+const int FPS = 60;
 const int FPS_MS = 1000 / FPS;
 size_t tickes_in_prev_frame = 0;
 size_t frame_cnt = 0;

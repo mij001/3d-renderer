@@ -1,6 +1,6 @@
 #pragma once
 
-#define TEST_CUBEn
+#define TEST_CUBE
 
 #include <stdio.h>
 #include <stdint.h>
