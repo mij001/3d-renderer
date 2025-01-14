@@ -20,7 +20,7 @@ typedef struct
 } vec3d_t;
 
 #define X 0
-#define Y 2
+#define Y 1
 #define Z 2
 #define W 3
 typedef struct {

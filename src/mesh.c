@@ -76,10 +76,11 @@ mesh_t rndr_load_cube_mesh()
 void rndr_updte_mesh(mesh_t *cube_mesh, vec3d_t camera)
 {
     for (size_t i = 0; i < cube_mesh->n_vertices; i++) {
-        vec3d_t pos = get_list_element(vec3d_t, cube_mesh->vertices, i);
-        get_list_element(vec3d_t, cube_mesh->vertices_tf, i) = rot_x_vec(pos, cube_mesh->rotate.x);
-        get_list_element(vec3d_t, cube_mesh->vertices_tf, i) = rot_y_vec(get_list_element(vec3d_t, cube_mesh->vertices_tf, i), cube_mesh->rotate.y);
-        get_list_element(vec3d_t, cube_mesh->vertices_tf, i) = rot_z_vec(get_list_element(vec3d_t, cube_mesh->vertices_tf, i), cube_mesh->rotate.z);
+        vec3d_t local_pos = get_list_element(vec3d_t, cube_mesh->vertices, i);
+        vec4d_t local_pos_4d = vec3d_to_4d(local_pos);
+        mat4d_t rot_mat = create_rot_mat4d(cube_mesh->rotate.x, cube_mesh->rotate.y, cube_mesh->rotate.z);
+        vec4d_t world_pos = mul_mat4d_vec4d(rot_mat, local_pos_4d);
+        get_list_element(vec3d_t, cube_mesh->vertices_tf, i) = vec4d_to_3d(world_pos);
 
         (get_list_element(vec3d_t, cube_mesh->vertices_tf, i)).x -= camera.x;
         (get_list_element(vec3d_t, cube_mesh->vertices_tf, i)).y -= camera.y;

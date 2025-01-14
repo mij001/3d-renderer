@@ -210,8 +210,6 @@ vec4d_t vec4d_sub(vec4d_t v1, vec4d_t v2)
 
 float vec4d_dotp(vec4d_t v1, vec4d_t v2)
 {
-    vec4d_t va;
-
     return  v1.arr[X] * v2.arr[X] +
         v1.arr[Y] * v2.arr[Y] +
         v1.arr[Z] * v2.arr[Z] +

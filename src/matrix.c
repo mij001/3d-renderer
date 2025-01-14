@@ -66,7 +66,7 @@ mat3d_t mul_mat3d_mat3d(mat3d_t m1, mat3d_t m2)
         for (size_t j = 0; j < 3; j++) {
             float sum = 0;
             for (size_t k = 0; k < 3; k++) {
-                sum += m1.mat[i][k] + m2.mat[k][j];
+                sum += m1.mat[i][k] * m2.mat[k][j];
             }
             m.mat[i][j] = sum;
         }
@@ -81,7 +81,7 @@ mat3d_t scale_mat3d(float s, mat3d_t m)
             mo.mat[i][j] = m.mat[i][j] * s;
         }
     }
-    return m;
+    return mo;
 }
 
 
@@ -139,7 +139,7 @@ mat4d_t mul_mat4d_mat4d(mat4d_t m1, mat4d_t m2)
         for (size_t j = 0; j < 4; j++) {
             float sum = 0;
             for (size_t k = 0; k < 4; k++) {
-                sum += m1.mat[i][k] + m2.mat[k][j];
+                sum += m1.mat[i][k] * m2.mat[k][j];
             }
             m.mat[i][j] = sum;
         }
@@ -152,9 +152,9 @@ vec4d_t mul_mat4d_vec4d(mat4d_t m, vec4d_t v)
     for (size_t i = 0; i < 4; i++) {
         float sum = 0;
         for (size_t k = 0; k < 4; k++) {
-            sum += m.mat[i][k] + v.arr[k];
+            sum += m.mat[i][k] * v.arr[k];
         }
-        v.arr[i] = sum;
+        vo.arr[i] = sum;
     }
     return vo;
 }
@@ -167,7 +167,7 @@ mat4d_t scale_mat4d(float s, mat4d_t m)
             mo.mat[i][j] = m.mat[i][j] * s;
         }
     }
-    return m;
+    return mo;
 }
 
 mat4d_t create_scale_mat4d(float x, float y, float z)
