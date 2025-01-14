@@ -40,3 +40,8 @@ mat4d_t sub_mat4d(mat4d_t m1, mat4d_t m2);
 mat4d_t mul_mat4d_mat4d(mat4d_t m1, mat4d_t m2);
 vec4d_t mul_mat4d_vec4d(mat4d_t m, vec4d_t v);
 mat4d_t scale_mat4d(float s, mat4d_t m);
+
+mat4d_t create_scale_mat4d(float x, float y, float z);
+mat4d_t create_transl_mat4d(float x, float y, float z);
+mat4d_t create_rot_mat4d(float x, float y, float z);
+mat4d_t create_mat4d_perspective(float aspect, float fov, float zfar, float znear);

@@ -169,3 +169,55 @@ mat4d_t scale_mat4d(float s, mat4d_t m)
     }
     return m;
 }
+
+mat4d_t create_scale_mat4d(float x, float y, float z)
+{
+    mat4d_t m = create_mat4d_iden();
+    m.mat[0][0] = x;
+    m.mat[1][1] = y;
+    m.mat[2][2] = z;
+    return m;
+}
+
+mat4d_t create_transl_mat4d(float x, float y, float z)
+{
+    mat4d_t m = create_mat4d_iden();
+    m.mat[3][0] = x;
+    m.mat[3][1] = y;
+    m.mat[3][2] = z;
+    return m;
+}
+
+mat4d_t create_rot_mat4d(float x, float y, float z)
+{
+    mat4d_t rx = create_mat4d_iden();
+    rx.mat[1][1] = cos(x);
+    rx.mat[2][2] = cos(x);
+    rx.mat[1][2] = sin(x);
+    rx.mat[2][1] = -sin(x);
+
+    mat4d_t ry = create_mat4d_iden();
+    ry.mat[0][0] = cos(y);
+    ry.mat[2][2] = cos(y);
+    ry.mat[2][0] = sin(y);
+    ry.mat[0][2] = -sin(y);
+
+    mat4d_t rz = create_mat4d_iden();
+    rz.mat[0][0] = cos(z);
+    rz.mat[1][1] = cos(z);
+    rz.mat[1][0] = sin(z);
+    rz.mat[0][1] = -sin(z);
+    mat4d_t m = mul_mat4d_mat4d(rx, mul_mat4d_mat4d(ry, rz));
+    return m;
+}
+
+mat4d_t create_mat4d_perspective(float aspect, float fov, float zfar, float znear)
+{
+    mat4d_t m = create_mat4d_zero();
+    m.mat[0][0] = aspect * (1 / tan(fov / 2));
+    m.mat[1][1] = 1 / tan(fov / 2);
+    m.mat[2][2] = zfar / (zfar - znear);
+    m.mat[2][3] = (-zfar * znear) / (zfar - znear);
+    m.mat[3][2] = 1;
+    return m;
+}
