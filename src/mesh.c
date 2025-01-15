@@ -58,9 +58,9 @@ mesh_t rndr_load_cube_mesh()
         push_to_list(faces, cube_mesh_faces[i]);
     }
 
-    float scale = 0;
-    vec3d_t translate = { 0 };
-    vec3d_t rotate = { 0 };
+    vec3d_t scale = { .x = 2,.y = .5,.z = .5 };;
+    vec3d_t translate = { .x = 1,.y = 0,.z = -1 };
+    vec3d_t rotate = { .x = 60,.y = 90,.z = 10 };
 
     mesh.vertices = vertices;
     mesh.vertices_tf = vertices_tf;
@@ -78,8 +78,12 @@ void rndr_updte_mesh(mesh_t *cube_mesh, vec3d_t camera)
     for (size_t i = 0; i < cube_mesh->n_vertices; i++) {
         vec3d_t local_pos = get_list_element(vec3d_t, cube_mesh->vertices, i);
         vec4d_t local_pos_4d = vec3d_to_4d(local_pos);
+
+        mat4d_t scale_mat = create_scale_mat4d(cube_mesh->scale.x, cube_mesh->scale.y, cube_mesh->scale.z);
         mat4d_t rot_mat = create_rot_mat4d(cube_mesh->rotate.x, cube_mesh->rotate.y, cube_mesh->rotate.z);
-        vec4d_t world_pos = mul_mat4d_vec4d(rot_mat, local_pos_4d);
+        mat4d_t transl_mat = create_transl_mat4d(cube_mesh->translate.x, cube_mesh->translate.y, cube_mesh->translate.z);
+
+        vec4d_t world_pos = mul_mat4d_vec4d(mul_mat4d_mat4d(transl_mat, mul_mat4d_mat4d(rot_mat, scale_mat)), local_pos_4d);
         get_list_element(vec3d_t, cube_mesh->vertices_tf, i) = vec4d_to_3d(world_pos);
 
         (get_list_element(vec3d_t, cube_mesh->vertices_tf, i)).x -= camera.x;
@@ -176,7 +180,7 @@ mesh_t rndr_load_obj_mesh(const char *filename)
             // printf("%s - %d\n", type, face_a);
         }
 
-        float scale = 0;
+        vec3d_t scale = { .x = 1,.y = 1,.z = 1 };
         vec3d_t translate = { 0 };
         vec3d_t rotate = { 0 };
 

@@ -30,7 +30,7 @@ typedef struct {
     size_t n_faces;
     list_t vertices; /* verticies of the mesh before linear trasforming*/
     list_t faces; /* face virticies of the mesh as indeicies of the virticies dyn array*/
-    float scale; /* scaling factor of the mesh*/
+    vec3d_t scale; /* scaling factor of the mesh*/
     vec3d_t translate; /* translation vector of the mesh */
     vec3d_t rotate; /* rotation vector of the mesh */
     list_t vertices_tf; /* verticies of the mesh after linear trasforming*/

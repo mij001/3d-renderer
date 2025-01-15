@@ -102,8 +102,8 @@ void draw_face_on_grid(face_t face, list_t verticies_pj, uint32_t color)
 #ifdef TEST_CUBE
     printf("_p1={.x=%f, .y=%f}; \n_p2={.x=%f, .y=%f}; \n_p3={.x=%f, .y=%f};\n", p_point_a.x, p_point_a.y, p_point_b.x, p_point_b.y, p_point_c.x, p_point_c.y);
 #endif
-    // draw_triangle_on_grid(p_point_a, p_point_b, p_point_c, color);
-    draw_filled_triangle_on_grid(p_point_a, p_point_b, p_point_c, color);
+    draw_triangle_on_grid(p_point_a, p_point_b, p_point_c, color);
+    //draw_filled_triangle_on_grid(p_point_a, p_point_b, p_point_c, color);
 }
 
 void draw_filled_triangle_on_grid(vec2d_t p1, vec2d_t p2, vec2d_t p3, uint32_t color)

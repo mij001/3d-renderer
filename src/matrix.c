@@ -182,9 +182,10 @@ mat4d_t create_scale_mat4d(float x, float y, float z)
 mat4d_t create_transl_mat4d(float x, float y, float z)
 {
     mat4d_t m = create_mat4d_iden();
-    m.mat[3][0] = x;
-    m.mat[3][1] = y;
-    m.mat[3][2] = z;
+    m.mat[0][3] = x;
+    m.mat[1][3] = y;
+    m.mat[2][3] = z;
+    m.mat[3][3] = 1;
     return m;
 }
 
