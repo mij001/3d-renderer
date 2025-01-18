@@ -21,12 +21,7 @@ const int FPS_MS = 1000 / FPS;
 size_t tickes_in_prev_frame = 0;
 size_t frame_cnt = 0;
 
-#ifdef TEST_CUBE
-const size_t fov_scale_factor = 700;
-#endif
-#ifndef TEST_CUBE
-const size_t fov_scale_factor = 15000;
-#endif
+size_t fov_scale_factor = 700;
 
 size_t end_loop = 1;
 
@@ -35,7 +30,7 @@ mesh_t obj_mesh_g;
 vec3d_t camera_pos_g;
 float rot_angle = 0;
 
-void setup_renderer(void)
+void setup_renderer(const char *obj_path)
 {
     vec3d_t camera_pos = {
         .x = 0,
@@ -44,13 +39,13 @@ void setup_renderer(void)
     };
 
     camera_pos_g = camera_pos;
-#ifdef TEST_CUBE
-    obj_mesh_g = rndr_load_cube_mesh();
-#endif
-#ifndef TEST_CUBE
-    obj_mesh_g = rndr_load_obj_mesh("/home/inomal/projects/3d-graphics-fs/3d-renderer/src/samples/bunny.obj");
+    if (obj_path == NULL) {
+        obj_mesh_g = rndr_load_cube_mesh();
+        return;
+    }
+    obj_mesh_g = rndr_load_obj_mesh(obj_path);
     obj_mesh_g.rotate.z = 3.14;
-#endif
+    fov_scale_factor = 15000;
 }
 
 void handle_events(void)
@@ -163,11 +158,11 @@ void render_canvas(void)
     SDL_RenderPresent(renderer);
 }
 
-int main(void)
+int main(int argc, char **argv)
 {
     end_loop = renderer_init();
 
-    setup_renderer();
+    setup_renderer(argc > 1 ? argv[1] : NULL);
 
     while (!end_loop) {
         handle_events();
