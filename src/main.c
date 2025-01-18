@@ -82,14 +82,10 @@ void update_system(void)
     tickes_in_prev_frame = SDL_GetTicks();
     /////////////////////////////////
 
-    for (size_t i = 0; i < N_MESH_VERTICES; i++) {
-        /* point scaling, translation and rotations */
-        /* point scaling */
-        rndr_updte_mesh(&obj_mesh_g, camera_pos_g);
-        obj_mesh_g.rotate.x += 0.001;
-        obj_mesh_g.rotate.y += 0.001;
-        obj_mesh_g.rotate.z += 0.001;
-    }
+    obj_mesh_g.rotate.x += 0.001;
+    obj_mesh_g.rotate.y += 0.001;
+    obj_mesh_g.rotate.z += 0.001;
+    rndr_updte_mesh(&obj_mesh_g, camera_pos_g);
 }
 
 void render_canvas(void)
