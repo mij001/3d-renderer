@@ -88,10 +88,23 @@ void update_system(void)
     rndr_updte_mesh(&obj_mesh_g, camera_pos_g);
 }
 
+void report_fps(void)
+{
+    static size_t last_ms = 0;
+    frame_cnt++;
+    size_t now = SDL_GetTicks();
+    if (now - last_ms < 1000) {
+        return;
+    }
+    printf("%.1f fps\n", frame_cnt * 1000.0 / (now - last_ms));
+    last_ms = now;
+    frame_cnt = 0;
+}
+
 void render_canvas(void)
 {
     // sdl buittin red is replaced by my color using the buffer
-    printf("frame count: %ld \n", frame_cnt++);
+    report_fps();
     clear_color_buf(0xff000000);
     for (size_t i = 0; i < obj_mesh_g.n_faces; i++) {
         // vec2d_t p_point = projected_points[i];

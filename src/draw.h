@@ -1,7 +1,5 @@
 #pragma once
 
-#define TEST_CUBE
-
 #include <stdio.h>
 #include <stdint.h>
 #include <SDL2/SDL.h>
