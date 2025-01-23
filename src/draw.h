@@ -15,6 +15,7 @@
 #include "camera.h"
 
 void clear_color_buf(uint32_t color);
+void clear_z_buf(void);
 void draw_grid_on_buf(size_t stride, uint32_t color);
 void draw_rect_on_buf(int x, int y, size_t width, size_t height, uint32_t color);
 void draw_point_on_buf(int x, int y, uint32_t color);

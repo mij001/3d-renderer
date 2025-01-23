@@ -10,6 +10,7 @@ SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 SDL_Texture *rndr_texture = NULL;
 uint32_t  *color_buf = NULL;
+float *z_buf = NULL;
 
 size_t renderer_init(void)
 {
@@ -46,6 +47,7 @@ size_t renderer_init(void)
     RNDRR_ASRT((rndr_texture == NULL), "Error: SDL texture creation failed!");
 
     color_buf = (uint32_t *)malloc(sizeof(uint32_t) * window_height * window_width);
+    z_buf = (float *)malloc(sizeof(float) * window_height * window_width);
 
     return RENDR_OK;
 }

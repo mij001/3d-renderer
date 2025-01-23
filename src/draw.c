@@ -40,6 +40,13 @@ void draw_point_on_buf(int x, int y, uint32_t color)
     }
 }
 
+void clear_z_buf(void)
+{
+    for (size_t i = 0; i < window_width * window_height; i++) {
+        z_buf[i] = 0;
+    }
+}
+
 vec2d_t project_3dto2d(vec3d_t point)
 {
     vec2d_t projected = { point.x / point.z, point.y / point.z };

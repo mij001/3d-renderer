@@ -16,6 +16,7 @@ void render_color_buf()
 void destroy_renderer()
 {
     free(color_buf);
+    free(z_buf);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 }
