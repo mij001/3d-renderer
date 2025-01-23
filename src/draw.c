@@ -110,6 +110,29 @@ void draw_face_on_grid(face_t face, list_t verticies_pj, uint32_t color)
     //draw_filled_triangle_on_grid(p_point_a, p_point_b, p_point_c, color);
 }
 
+static float edge_fn(vec3d_t a, vec3d_t b, float px, float py)
+{
+    return (b.x - a.x) * (py - a.y) - (b.y - a.y) * (px - a.x);
+}
+
+void draw_filled_triangle_depth(vec3d_t a, vec3d_t b, vec3d_t c, uint32_t color)
+{
+    int min_x = (int)fminf(a.x, fminf(b.x, c.x));
+    int max_x = (int)fmaxf(a.x, fmaxf(b.x, c.x)) + 1;
+    int min_y = (int)fminf(a.y, fminf(b.y, c.y));
+    int max_y = (int)fmaxf(a.y, fmaxf(b.y, c.y)) + 1;
+    min_x = min_x < 0 ? 0 : min_x;
+    min_y = min_y < 0 ? 0 : min_y;
+    max_x = max_x >= (int)window_width ? (int)window_width - 1 : max_x;
+    max_y = max_y >= (int)window_height ? (int)window_height - 1 : max_y;
+
+    float area = edge_fn(a, b, c.x, c.y);
+    if (area == 0) {
+        return;
+    }
+
+}
+
 void draw_filled_triangle_on_grid(vec2d_t p1, vec2d_t p2, vec2d_t p3, uint32_t color)
 {
     vec2d_t vert_ordered[] = { p1,p2,p3 };

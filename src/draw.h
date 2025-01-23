@@ -26,5 +26,6 @@ void draw_face_on_grid(face_t face, list_t verticies_pj, uint32_t color);
 
 vec2d_t project_3dto2d(vec3d_t point);
 void draw_filled_triangle_on_grid(vec2d_t p1, vec2d_t p2, vec2d_t p3, uint32_t color);
+void draw_filled_triangle_depth(vec3d_t a, vec3d_t b, vec3d_t c, uint32_t color);
 void _draw_flat_triangle_on_grid(vec2d_t mid, vec2d_t mid_level, vec2d_t apex, uint32_t color);
 float _calc_porpotional_x(float y, vec2d_t v1, vec2d_t v2);
