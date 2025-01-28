@@ -151,6 +151,21 @@ void draw_filled_triangle_depth(vec3d_t a, vec3d_t b, vec3d_t c, uint32_t color)
     }
 }
 
+static vec3d_t screen_vertex(list_t pj, list_t tf, size_t index)
+{
+    vec2d_t p = rndr_camera_tf(get_list_element(vec2d_t, pj, index));
+    vec3d_t v = { .x = p.x, .y = p.y, .z = get_list_element(vec3d_t, tf, index).z };
+    return v;
+}
+
+void draw_face_solid(face_t face, list_t verticies_pj, list_t verticies_tf, uint32_t color)
+{
+    draw_filled_triangle_depth(
+        screen_vertex(verticies_pj, verticies_tf, face.a - 1),
+        screen_vertex(verticies_pj, verticies_tf, face.b - 1),
+        screen_vertex(verticies_pj, verticies_tf, face.c - 1), color);
+}
+
 void draw_filled_triangle_on_grid(vec2d_t p1, vec2d_t p2, vec2d_t p3, uint32_t color)
 {
     vec2d_t vert_ordered[] = { p1,p2,p3 };

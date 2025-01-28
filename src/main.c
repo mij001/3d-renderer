@@ -110,7 +110,7 @@ void render_canvas(void)
         // vec2d_t p_point = projected_points[i];
         face_t face = get_list_element(face_t, obj_mesh_g.faces, i);
         if (1 != rndr_is_cullable(face, obj_mesh_g.vertices_tf, camera_pos_g)) {
-            draw_face_on_grid(face, obj_mesh_g.vertices_pj, 0xff00ff00);
+            draw_face_solid(face, obj_mesh_g.vertices_pj, obj_mesh_g.vertices_tf, 0xff00ff00);
         }
     }
 

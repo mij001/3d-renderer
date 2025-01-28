@@ -23,6 +23,7 @@ void draw_line_on_buf(vec2d_t p1, vec2d_t p2, uint32_t color);
 void draw_triangle_on_grid(vec2d_t p1, vec2d_t p2, vec2d_t p3, uint32_t color);
 
 void draw_face_on_grid(face_t face, list_t verticies_pj, uint32_t color);
+void draw_face_solid(face_t face, list_t verticies_pj, list_t verticies_tf, uint32_t color);
 
 vec2d_t project_3dto2d(vec3d_t point);
 void draw_filled_triangle_on_grid(vec2d_t p1, vec2d_t p2, vec2d_t p3, uint32_t color);
