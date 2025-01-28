@@ -110,6 +110,16 @@ void draw_face_on_grid(face_t face, list_t verticies_pj, uint32_t color)
     //draw_filled_triangle_on_grid(p_point_a, p_point_b, p_point_c, color);
 }
 
+uint32_t shade_color(uint32_t color, float intensity)
+{
+    intensity = intensity < 0.15f ? 0.15f : intensity;
+    intensity = intensity > 1.0f ? 1.0f : intensity;
+    uint32_t r = (uint32_t)(((color >> 16) & 0xff) * intensity);
+    uint32_t g = (uint32_t)(((color >> 8) & 0xff) * intensity);
+    uint32_t b = (uint32_t)((color & 0xff) * intensity);
+    return (color & 0xff000000) | (r << 16) | (g << 8) | b;
+}
+
 static float edge_fn(vec3d_t a, vec3d_t b, float px, float py)
 {
     return (b.x - a.x) * (py - a.y) - (b.y - a.y) * (px - a.x);
