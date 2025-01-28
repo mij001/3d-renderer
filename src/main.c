@@ -106,6 +106,7 @@ void render_canvas(void)
     // sdl buittin red is replaced by my color using the buffer
     report_fps();
     clear_color_buf(0xff000000);
+    clear_z_buf();
     for (size_t i = 0; i < obj_mesh_g.n_faces; i++) {
         // vec2d_t p_point = projected_points[i];
         face_t face = get_list_element(face_t, obj_mesh_g.faces, i);
