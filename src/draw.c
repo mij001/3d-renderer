@@ -131,6 +131,24 @@ void draw_filled_triangle_depth(vec3d_t a, vec3d_t b, vec3d_t c, uint32_t color)
         return;
     }
 
+    for (int y = min_y; y <= max_y; y++) {
+        for (int x = min_x; x <= max_x; x++) {
+            float px = x + 0.5f, py = y + 0.5f;
+            float w0 = edge_fn(b, c, px, py) / area;
+            float w1 = edge_fn(c, a, px, py) / area;
+            float w2 = edge_fn(a, b, px, py) / area;
+            if (w0 < 0 || w1 < 0 || w2 < 0) {
+                continue;
+            }
+            float inv_z = w0 / a.z + w1 / b.z + w2 / c.z;
+            size_t idx = (size_t)y * window_width + x;
+            if (inv_z <= z_buf[idx]) {
+                continue;
+            }
+            z_buf[idx] = inv_z;
+            color_buf[idx] = color;
+        }
+    }
 }
 
 void draw_filled_triangle_on_grid(vec2d_t p1, vec2d_t p2, vec2d_t p3, uint32_t color)
