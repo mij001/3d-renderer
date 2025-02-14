@@ -31,6 +31,7 @@ vec3d_t camera_pos_g;
 vec3d_t light_dir_g = { .x = 0, .y = 0, .z = 1 };
 int show_solid_g = 1;
 int show_wire_g = 0;
+int paused_g = 0;
 float rot_angle = 0;
 
 void setup_renderer(const char *obj_path)
@@ -67,6 +68,11 @@ void handle_events(void)
         case SDLK_ESCAPE: end_loop = 1; break;
         case SDLK_f: show_solid_g = !show_solid_g; break;
         case SDLK_w: show_wire_g = !show_wire_g; break;
+        case SDLK_SPACE: paused_g = !paused_g; break;
+        case SDLK_LEFT: obj_mesh_g.rotate.y -= 0.05; break;
+        case SDLK_RIGHT: obj_mesh_g.rotate.y += 0.05; break;
+        case SDLK_UP: obj_mesh_g.rotate.x -= 0.05; break;
+        case SDLK_DOWN: obj_mesh_g.rotate.x += 0.05; break;
         default: break;
         }
     }
@@ -88,9 +94,11 @@ void update_system(void)
     tickes_in_prev_frame = SDL_GetTicks();
     /////////////////////////////////
 
-    obj_mesh_g.rotate.x += 0.001;
-    obj_mesh_g.rotate.y += 0.001;
-    obj_mesh_g.rotate.z += 0.001;
+    if (!paused_g) {
+        obj_mesh_g.rotate.x += 0.001;
+        obj_mesh_g.rotate.y += 0.001;
+        obj_mesh_g.rotate.z += 0.001;
+    }
     rndr_updte_mesh(&obj_mesh_g, camera_pos_g);
 }
 
