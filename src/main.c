@@ -69,6 +69,8 @@ void handle_events(void)
         case SDLK_f: show_solid_g = !show_solid_g; break;
         case SDLK_w: show_wire_g = !show_wire_g; break;
         case SDLK_SPACE: paused_g = !paused_g; break;
+        case SDLK_EQUALS: fov_scale_factor += fov_scale_factor / 10; break;
+        case SDLK_MINUS: fov_scale_factor -= fov_scale_factor / 10; break;
         case SDLK_LEFT: obj_mesh_g.rotate.y -= 0.05; break;
         case SDLK_RIGHT: obj_mesh_g.rotate.y += 0.05; break;
         case SDLK_UP: obj_mesh_g.rotate.x -= 0.05; break;
