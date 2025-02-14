@@ -29,6 +29,8 @@ mesh_t obj_mesh_g;
 
 vec3d_t camera_pos_g;
 vec3d_t light_dir_g = { .x = 0, .y = 0, .z = 1 };
+int show_solid_g = 1;
+int show_wire_g = 0;
 float rot_angle = 0;
 
 void setup_renderer(const char *obj_path)
@@ -61,8 +63,11 @@ void handle_events(void)
 
     case SDL_KEYDOWN:
     {
-        if (rndrr_events.key.keysym.sym == SDLK_ESCAPE) {
-            end_loop = 1;
+        switch (rndrr_events.key.keysym.sym) {
+        case SDLK_ESCAPE: end_loop = 1; break;
+        case SDLK_f: show_solid_g = !show_solid_g; break;
+        case SDLK_w: show_wire_g = !show_wire_g; break;
+        default: break;
         }
     }
     break;
@@ -114,8 +119,13 @@ void render_canvas(void)
         if (1 != rndr_is_cullable(face, obj_mesh_g.vertices_tf, camera_pos_g)) {
             vec3d_t normal = vec3d_normalize(get_face_normal(face, obj_mesh_g.vertices_tf));
             float intensity = -vec3d_dotp(normal, light_dir_g);
-            draw_face_solid(face, obj_mesh_g.vertices_pj, obj_mesh_g.vertices_tf,
-                shade_color(0xff00ff00, intensity));
+            if (show_solid_g) {
+                draw_face_solid(face, obj_mesh_g.vertices_pj, obj_mesh_g.vertices_tf,
+                    shade_color(0xff00ff00, intensity));
+            }
+            if (show_wire_g) {
+                draw_face_on_grid(face, obj_mesh_g.vertices_pj, 0xff303030);
+            }
         }
     }
 
