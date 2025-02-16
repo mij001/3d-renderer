@@ -34,6 +34,21 @@ int show_wire_g = 0;
 int paused_g = 0;
 float rot_angle = 0;
 
+/* normalise the model to a unit radius so any obj fits the window */
+void fit_mesh_to_view(mesh_t *mesh)
+{
+    float max_r = 0;
+    for (size_t i = 0; i < mesh->n_vertices; i++) {
+        float r = vec3d_mag(get_list_element(vec3d_t, mesh->vertices, i));
+        max_r = r > max_r ? r : max_r;
+    }
+    if (max_r <= 0) {
+        return;
+    }
+    mesh->scale.x = mesh->scale.y = mesh->scale.z = 1.0f / max_r;
+    fov_scale_factor = (5 * window_height) / 3;
+}
+
 void setup_renderer(const char *obj_path)
 {
     vec3d_t camera_pos = {
@@ -49,7 +64,7 @@ void setup_renderer(const char *obj_path)
     }
     obj_mesh_g = rndr_load_obj_mesh(obj_path);
     obj_mesh_g.rotate.z = 3.14;
-    fov_scale_factor = 15000;
+    fit_mesh_to_view(&obj_mesh_g);
 }
 
 void handle_events(void)
