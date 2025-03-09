@@ -81,6 +81,10 @@ void handle_events(void)
         switch (rndrr_events.key.keysym.sym) {
         case SDLK_ESCAPE: end_loop = 1; break;
         case SDLK_TAB: render_mode_g = (render_mode_g + 1) % 3; break;
+        case SDLK_w: camera_pos_g.z += 0.1; break;
+        case SDLK_s: camera_pos_g.z -= 0.1; break;
+        case SDLK_a: camera_pos_g.x -= 0.1; break;
+        case SDLK_d: camera_pos_g.x += 0.1; break;
         case SDLK_SPACE: paused_g = !paused_g; break;
         case SDLK_EQUALS: fov_scale_factor += fov_scale_factor / 10; break;
         case SDLK_MINUS: fov_scale_factor -= fov_scale_factor / 10; break;
