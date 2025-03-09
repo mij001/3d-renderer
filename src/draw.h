@@ -1,5 +1,7 @@
 #pragma once
 
+#define NEAR_Z 0.1f
+
 #include <stdio.h>
 #include <stdint.h>
 #include <SDL2/SDL.h>

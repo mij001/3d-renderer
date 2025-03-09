@@ -170,10 +170,15 @@ static vec3d_t screen_vertex(list_t pj, list_t tf, size_t index)
 
 void draw_face_solid(face_t face, list_t verticies_pj, list_t verticies_tf, uint32_t color)
 {
-    draw_filled_triangle_depth(
-        screen_vertex(verticies_pj, verticies_tf, face.a - 1),
-        screen_vertex(verticies_pj, verticies_tf, face.b - 1),
-        screen_vertex(verticies_pj, verticies_tf, face.c - 1), color);
+    vec3d_t a = screen_vertex(verticies_pj, verticies_tf, face.a - 1);
+    vec3d_t b = screen_vertex(verticies_pj, verticies_tf, face.b - 1);
+    vec3d_t c = screen_vertex(verticies_pj, verticies_tf, face.c - 1);
+
+    /* anything at or behind the eye projects to nonsense */
+    if (a.z <= NEAR_Z || b.z <= NEAR_Z || c.z <= NEAR_Z) {
+        return;
+    }
+    draw_filled_triangle_depth(a, b, c, color);
 }
 
 void draw_filled_triangle_on_grid(vec2d_t p1, vec2d_t p2, vec2d_t p3, uint32_t color)
