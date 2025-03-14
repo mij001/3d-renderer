@@ -1,6 +1,6 @@
 #pragma once
 
-#define NEAR_Z 0.1f
+#define NEAR_Z 1.0f
 
 #include <stdio.h>
 #include <stdint.h>
