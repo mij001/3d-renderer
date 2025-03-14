@@ -46,8 +46,11 @@ mesh_t rndr_load_cube_mesh()
     list_t vertices_tf = list_create(sizeof(vec3d_t), 1);
     list_t faces = list_create(sizeof(face_t), 1);
     list_t vertices_pj = list_create(sizeof(vec2d_t), 1);
+    list_t vertex_normals = list_create(sizeof(vec3d_t), 1);
 
     for (size_t i = 0; i < mesh.n_vertices; i++) {
+        vec3d_t no_normal = { 0 };
+        push_to_list(vertex_normals, no_normal);
         push_to_list(vertices, cube_mesh_vertices[i]);
         push_to_list(vertices_tf, cube_mesh_vertices[i]);
 
@@ -66,6 +69,7 @@ mesh_t rndr_load_cube_mesh()
     mesh.vertices_tf = vertices_tf;
     mesh.faces = faces;
     mesh.vertices_pj = vertices_pj;
+    mesh.vertex_normals = vertex_normals;
     mesh.scale = scale;
     mesh.translate = translate;
     mesh.rotate = rotate;
@@ -110,6 +114,7 @@ void rndr_destroy_mesh(mesh_t mesh)
     destroy_list(mesh.faces);
     destroy_list(mesh.vertices);
     destroy_list(mesh.vertices_tf);
+    destroy_list(mesh.vertex_normals);
 }
 
 mesh_t rndr_load_obj_mesh(const char *filename)
@@ -124,6 +129,7 @@ mesh_t rndr_load_obj_mesh(const char *filename)
     list_t vertices_tf = list_create(sizeof(vec3d_t), 1);
     list_t faces = list_create(sizeof(face_t), 1);
     list_t vertices_pj = list_create(sizeof(vec2d_t), 1);
+    list_t vertex_normals = list_create(sizeof(vec3d_t), 1);
 
     fp = fopen(filename, "rw");
     assert(fp != NULL);
@@ -158,6 +164,8 @@ mesh_t rndr_load_obj_mesh(const char *filename)
 
             vec2d_t projected0 = { 0 };
             push_to_list(vertices_pj, projected0);
+            vec3d_t no_normal = { 0 };
+            push_to_list(vertex_normals, no_normal);
 
             mesh.n_vertices++;
 
@@ -188,6 +196,7 @@ mesh_t rndr_load_obj_mesh(const char *filename)
         mesh.vertices_tf = vertices_tf;
         mesh.faces = faces;
         mesh.vertices_pj = vertices_pj;
+        mesh.vertex_normals = vertex_normals;
         mesh.scale = scale;
         mesh.translate = translate;
         mesh.rotate = rotate;

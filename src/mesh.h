@@ -35,6 +35,7 @@ typedef struct {
     vec3d_t rotate; /* rotation vector of the mesh */
     list_t vertices_tf; /* verticies of the mesh after linear trasforming*/
     list_t vertices_pj; /* projected verticies to the 2d screen */
+    list_t vertex_normals; /* one averaged normal per vertex */
 } mesh_t;
 
 mesh_t rndr_load_cube_mesh();
