@@ -210,6 +210,25 @@ mesh_t rndr_load_obj_mesh(const char *filename)
     return mesh;
 }
 
+void rndr_update_normals(mesh_t *mesh)
+{
+    for (size_t i = 0; i < mesh->n_vertices; i++) {
+        vec3d_t zero = { 0 };
+        get_list_element(vec3d_t, mesh->vertex_normals, i) = zero;
+    }
+
+    for (size_t i = 0; i < mesh->n_faces; i++) {
+        face_t face = get_list_element(face_t, mesh->faces, i);
+        vec3d_t normal = get_face_normal(face, mesh->vertices_tf);
+        size_t corner[3] = { face.a - 1, face.b - 1, face.c - 1 };
+
+        for (size_t k = 0; k < 3; k++) {
+            vec3d_t summed = get_list_element(vec3d_t, mesh->vertex_normals, corner[k]);
+            get_list_element(vec3d_t, mesh->vertex_normals, corner[k]) = vec3d_add(summed, normal);
+        }
+    }
+}
+
 vec3d_t get_face_normal(face_t face, list_t verticiess)
 {
     return get_normal_vec(

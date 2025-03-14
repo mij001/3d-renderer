@@ -119,6 +119,7 @@ void update_system(void)
         obj_mesh_g.rotate.z += 0.001;
     }
     rndr_updte_mesh(&obj_mesh_g, camera_pos_g);
+    rndr_update_normals(&obj_mesh_g);
 }
 
 void report_fps(void)
