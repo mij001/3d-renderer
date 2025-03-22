@@ -30,6 +30,7 @@ mesh_t obj_mesh_g;
 vec3d_t camera_pos_g;
 vec3d_t light_dir_g = { .x = 0, .y = 0, .z = 1 };
 int render_mode_g = 0; /* 0 solid, 1 wire, 2 both */
+int gouraud_g = 1;
 int paused_g = 0;
 float rot_angle = 0;
 
@@ -81,6 +82,7 @@ void handle_events(void)
         switch (rndrr_events.key.keysym.sym) {
         case SDLK_ESCAPE: end_loop = 1; break;
         case SDLK_TAB: render_mode_g = (render_mode_g + 1) % 3; break;
+        case SDLK_g: gouraud_g = !gouraud_g; break;
         case SDLK_w: camera_pos_g.z += 0.1; break;
         case SDLK_s: camera_pos_g.z -= 0.1; break;
         case SDLK_a: camera_pos_g.x -= 0.1; break;
@@ -122,6 +124,12 @@ void update_system(void)
     rndr_update_normals(&obj_mesh_g);
 }
 
+float vertex_intensity(mesh_t *mesh, size_t index)
+{
+    vec3d_t normal = vec3d_normalize(get_list_element(vec3d_t, mesh->vertex_normals, index));
+    return -vec3d_dotp(normal, light_dir_g);
+}
+
 void report_fps(void)
 {
     static size_t last_ms = 0;
@@ -149,6 +157,11 @@ void render_canvas(void)
             float intensity = -vec3d_dotp(normal, light_dir_g);
             if (render_mode_g != 1) {
                 tri_light_t light = { intensity, intensity, intensity };
+                if (gouraud_g) {
+                    light.a = vertex_intensity(&obj_mesh_g, face.a - 1);
+                    light.b = vertex_intensity(&obj_mesh_g, face.b - 1);
+                    light.c = vertex_intensity(&obj_mesh_g, face.c - 1);
+                }
                 draw_face_solid(face, obj_mesh_g.vertices_pj, obj_mesh_g.vertices_tf,
                     light, 0xff00ff00);
             }
