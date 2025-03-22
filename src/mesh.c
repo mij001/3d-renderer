@@ -227,6 +227,11 @@ void rndr_update_normals(mesh_t *mesh)
             get_list_element(vec3d_t, mesh->vertex_normals, corner[k]) = vec3d_add(summed, normal);
         }
     }
+
+    for (size_t i = 0; i < mesh->n_vertices; i++) {
+        vec3d_t summed = get_list_element(vec3d_t, mesh->vertex_normals, i);
+        get_list_element(vec3d_t, mesh->vertex_normals, i) = vec3d_normalize(summed);
+    }
 }
 
 vec3d_t get_face_normal(face_t face, list_t verticiess)

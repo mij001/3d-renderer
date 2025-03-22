@@ -126,8 +126,7 @@ void update_system(void)
 
 float vertex_intensity(mesh_t *mesh, size_t index)
 {
-    vec3d_t normal = vec3d_normalize(get_list_element(vec3d_t, mesh->vertex_normals, index));
-    return -vec3d_dotp(normal, light_dir_g);
+    return -vec3d_dotp(get_list_element(vec3d_t, mesh->vertex_normals, index), light_dir_g);
 }
 
 void report_fps(void)
