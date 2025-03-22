@@ -148,8 +148,9 @@ void render_canvas(void)
             vec3d_t normal = vec3d_normalize(get_face_normal(face, obj_mesh_g.vertices_tf));
             float intensity = -vec3d_dotp(normal, light_dir_g);
             if (render_mode_g != 1) {
+                tri_light_t light = { intensity, intensity, intensity };
                 draw_face_solid(face, obj_mesh_g.vertices_pj, obj_mesh_g.vertices_tf,
-                    shade_color(0xff00ff00, intensity));
+                    light, 0xff00ff00);
             }
             if (render_mode_g != 0) {
                 draw_face_on_grid(face, obj_mesh_g.vertices_pj, 0xff303030);

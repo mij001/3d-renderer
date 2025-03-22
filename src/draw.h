@@ -2,6 +2,12 @@
 
 #define NEAR_Z 1.0f
 
+typedef struct {
+    float a;
+    float b;
+    float c;
+} tri_light_t;
+
 #include <stdio.h>
 #include <stdint.h>
 #include <SDL2/SDL.h>
@@ -26,10 +32,10 @@ void draw_line_on_buf(vec2d_t p1, vec2d_t p2, uint32_t color);
 void draw_triangle_on_grid(vec2d_t p1, vec2d_t p2, vec2d_t p3, uint32_t color);
 
 void draw_face_on_grid(face_t face, list_t verticies_pj, uint32_t color);
-void draw_face_solid(face_t face, list_t verticies_pj, list_t verticies_tf, uint32_t color);
+void draw_face_solid(face_t face, list_t verticies_pj, list_t verticies_tf, tri_light_t light, uint32_t color);
 
 vec2d_t project_3dto2d(vec3d_t point);
 void draw_filled_triangle_on_grid(vec2d_t p1, vec2d_t p2, vec2d_t p3, uint32_t color);
-void draw_filled_triangle_depth(vec3d_t a, vec3d_t b, vec3d_t c, uint32_t color);
+void draw_filled_triangle_depth(vec3d_t a, vec3d_t b, vec3d_t c, tri_light_t light, uint32_t color);
 void _draw_flat_triangle_on_grid(vec2d_t mid, vec2d_t mid_level, vec2d_t apex, uint32_t color);
 float _calc_porpotional_x(float y, vec2d_t v1, vec2d_t v2);

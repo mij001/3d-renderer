@@ -125,7 +125,7 @@ static float edge_fn(vec3d_t a, vec3d_t b, float px, float py)
     return (b.x - a.x) * (py - a.y) - (b.y - a.y) * (px - a.x);
 }
 
-void draw_filled_triangle_depth(vec3d_t a, vec3d_t b, vec3d_t c, uint32_t color)
+void draw_filled_triangle_depth(vec3d_t a, vec3d_t b, vec3d_t c, tri_light_t light, uint32_t color)
 {
     int min_x = (int)fminf(a.x, fminf(b.x, c.x));
     int max_x = (int)fmaxf(a.x, fmaxf(b.x, c.x)) + 1;
@@ -156,7 +156,7 @@ void draw_filled_triangle_depth(vec3d_t a, vec3d_t b, vec3d_t c, uint32_t color)
                 continue;
             }
             z_buf[idx] = inv_z;
-            color_buf[idx] = color;
+            color_buf[idx] = shade_color(color, w0 * light.a + w1 * light.b + w2 * light.c);
         }
     }
 }
@@ -168,7 +168,7 @@ static vec3d_t screen_vertex(list_t pj, list_t tf, size_t index)
     return v;
 }
 
-void draw_face_solid(face_t face, list_t verticies_pj, list_t verticies_tf, uint32_t color)
+void draw_face_solid(face_t face, list_t verticies_pj, list_t verticies_tf, tri_light_t light, uint32_t color)
 {
     vec3d_t a = screen_vertex(verticies_pj, verticies_tf, face.a - 1);
     vec3d_t b = screen_vertex(verticies_pj, verticies_tf, face.b - 1);
@@ -178,7 +178,7 @@ void draw_face_solid(face_t face, list_t verticies_pj, list_t verticies_tf, uint
     if (a.z <= NEAR_Z || b.z <= NEAR_Z || c.z <= NEAR_Z) {
         return;
     }
-    draw_filled_triangle_depth(a, b, c, color);
+    draw_filled_triangle_depth(a, b, c, light, color);
 }
 
 void draw_filled_triangle_on_grid(vec2d_t p1, vec2d_t p2, vec2d_t p3, uint32_t color)
