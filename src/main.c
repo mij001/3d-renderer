@@ -31,6 +31,7 @@ vec3d_t camera_pos_g;
 vec3d_t light_dir_g = { .x = 0, .y = 0, .z = 1 };
 int render_mode_g = 0; /* 0 solid, 1 wire, 2 both */
 int gouraud_g = 1;
+int cull_g = 1;
 int paused_g = 0;
 float rot_angle = 0;
 
@@ -83,6 +84,7 @@ void handle_events(void)
         case SDLK_ESCAPE: end_loop = 1; break;
         case SDLK_TAB: render_mode_g = (render_mode_g + 1) % 3; break;
         case SDLK_g: gouraud_g = !gouraud_g; break;
+        case SDLK_c: cull_g = !cull_g; break;
         case SDLK_w: camera_pos_g.z += 0.1; break;
         case SDLK_s: camera_pos_g.z -= 0.1; break;
         case SDLK_a: camera_pos_g.x -= 0.1; break;
@@ -151,7 +153,7 @@ void render_canvas(void)
     for (size_t i = 0; i < obj_mesh_g.n_faces; i++) {
         // vec2d_t p_point = projected_points[i];
         face_t face = get_list_element(face_t, obj_mesh_g.faces, i);
-        if (1 != rndr_is_cullable(face, obj_mesh_g.vertices_tf, camera_pos_g)) {
+        if (!cull_g || 1 != rndr_is_cullable(face, obj_mesh_g.vertices_tf, camera_pos_g)) {
             vec3d_t normal = vec3d_normalize(get_face_normal(face, obj_mesh_g.vertices_tf));
             float intensity = -vec3d_dotp(normal, light_dir_g);
             if (render_mode_g != 1) {
